@@ -5,6 +5,7 @@ import bgimage1 from '../../assets/images/bgimage1.jpg'
 import Carosel from '../indexpages/Carosel'
 import UserNavbar from './UserNavbar'
 import UserFooter from './UserFooter'
+import RawPost from './RawPost'
 
 
 function UserHome() {
@@ -47,9 +48,8 @@ function UserHome() {
 {/* <div style={{ minHeight: '200vh' }}> */}
 <div>
         <Carosel/>
-        <h2>Welcome to the Home Page</h2>
-        <p>Scroll down to see the effect. The navbar and background remain fixed.</p>
-        {/* Add your actual page content here */}
+        <RawPost genre="Fiction" title="Fiction  Books" />
+        <RawPost genre="Crime" title="Crime  Books" />
       </div>
       <UserFooter/>
     </div>

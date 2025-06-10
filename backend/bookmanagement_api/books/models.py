@@ -29,7 +29,6 @@ class User(AbstractUser):
 
     
     
-
 class Profile(models.Model):
     user = models.OneToOneField(User,on_delete=models.CASCADE)
     firstName = models.CharField(max_length=1000,blank=True,null=True)
@@ -39,3 +38,18 @@ class Profile(models.Model):
     mobile = models.CharField(max_length=1000,blank=True,null=True)
     date = models.DateTimeField(auto_now_add=True)
 
+
+def upload_to(instance, filename):
+    return 'books/{filename}'.format(filename=filename)
+class Books(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    title = models.CharField(max_length=5000,blank=True,null=True)
+    author = models.CharField(max_length=1000,blank=True,null=True)
+    genre = models.CharField(max_length=1000,blank=True,null=True)
+    publicationDate = models.DateField(blank=True,null=True)
+    language = models.CharField(max_length=1000,blank=True,null=True)
+    nopage = models.BigIntegerField(blank=True, null=True)
+    description = models.CharField(max_length=5000,blank=True,null=True)
+    images = models.ImageField(upload_to=upload_to,null=True, blank=True)
+    date_created = models.DateField(auto_now_add=True)
+    date_updated = models.DateField(auto_now=True)

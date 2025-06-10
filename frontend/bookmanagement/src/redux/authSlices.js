@@ -37,7 +37,63 @@ export const userDetails = createAsyncThunk('user/userDetails',async (_,{rejectW
     }
 })
 
+// User profile------------------------
+export const userProfile = createAsyncThunk('user/profile',async(_,{rejectWithValue})=>{
+    try{
+        const response = await axiosInstance.get('/user_profile')
+        return response.data
+    }catch(error){
+        return rejectWithValue(error.response?.data || 'Failed to fetch details');
+    }
+})
 
+export const updateUserProfile = createAsyncThunk('user/updateStudentProfile',
+    async(updatedData,{rejectWithValue})=>{
+     try{
+    const response = await axiosInstance.put('/user_profile/',updatedData)
+      return response.data
+    }catch(error){
+        return rejectWithValue(error.response?.data || 'Failed to updatedetails');
+    }
+  }
+  )
+
+  //---------------Adding Books -------------------------
+
+  export const addBook = createAsyncThunk('books/addBooks',
+    async(updatedBookData,{rejectWithValue}) =>{
+        try{
+
+            const formData = new FormData();
+      
+            // Append regular data
+            formData.append('title', updatedBookData.title);
+            formData.append('description', updatedBookData.description);
+            formData.append('author', updatedBookData.author);
+            formData.append('genre', updatedBookData.genre);
+            formData.append('publicationDate',updatedBookData.publicationDate)
+            formData.append('language', updatedBookData.language);
+            if (!isNaN(parseInt(updatedBookData.nopages))) {
+                formData.append('nopage', parseInt(updatedBookData.nopages));
+            }
+           
+            
+            // Append image (if any)
+            if (updatedBookData.image) {
+              formData.append('images', updatedBookData.image);
+            }
+          
+        const response = await axiosInstance.post('/books/',formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data', // Ensure the correct content type
+            },
+          });
+          return response.data
+      }catch(error){
+            return rejectWithValue(error.response?.data || 'Failed add book')
+        }
+    }
+  )
 
 export const logoutUser = (navigate) => async (dispatch) => {
     try {
@@ -65,6 +121,7 @@ const authSlice = createSlice({
     error: null,
     isAuthenticated: !!localStorage.getItem('access'),
     user_details : null,
+    user_profile : null,
   },
   reducers: {
     logout: (state) => {
@@ -79,6 +136,14 @@ const authSlice = createSlice({
   extraReducers: (builder) => {
     builder
 
+      .addCase(userProfile.pending,(state)=>{
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(userProfile.fulfilled,(state,action)=>{
+        state.loading = false;
+        state.user_profile = action.payload;
+      })
       .addCase(userDetails.pending,(state)=>{
         state.loading = true;
         state.error = null;

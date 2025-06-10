@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from rest_framework.exceptions import AuthenticationFailed
-from books.models import User
+from books.models import (User,Profile,Books)
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from books.models import Profile, User
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -103,3 +103,84 @@ class RegisterSerializer(serializers.ModelSerializer):
         profile.save()
         return user
         
+class ProfileSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset = User.objects.all())
+    email = serializers.CharField(source='user.email', required=False)
+    class Meta:
+        model = Profile
+        fields = ['id', 'user', 'firstName', 'lastName', 'gender', 'place', 'mobile', 'date','email']
+    def validate_firstName(self, value):
+        return contains_alpha(value)
+
+    def validate_lastName(self, value):
+        return contains_alpha(value)
+        
+    def validate_gender(self,value):
+        GENDER_CHOICES = ['Male', 'Female', 'Other']
+        if value.capitalize() not in GENDER_CHOICES:
+            raise serializers.ValidationError("Invalid gender.")
+        return value
+        
+        
+    def validate_email(self, value):
+        user = self.context['request'].user
+        if User.objects.exclude(pk=user.pk).filter(email=value).exists():
+            raise serializers.ValidationError("Email is already registered with another user.")
+        if not re.match(r"[^@]+@[^@]+\.[^@]+", value):
+            raise serializers.ValidationError("Enter Valid email")
+        return value
+           
+              
+    def update(self, instance, validated_data):
+            # Update fields properly
+        instance.firstName = validated_data.get('firstName', instance.firstName)
+        instance.lastName = validated_data.get('lastName', instance.lastName)
+        instance.gender = validated_data.get('gender', instance.gender)
+        instance.place = validated_data.get('place', instance.place)
+        instance.mobile = validated_data.get('mobile', instance.mobile)
+            # Optional: update user's email if provided
+        email = validated_data.get('email')
+        if email:
+            instance.user.email = email
+            instance.user.save()
+        instance.save()
+        return instance
+
+class BookSerializer(serializers.ModelSerializer):
+    images = serializers.ImageField(required=False)
+    class Meta:
+        model = Books
+        fields = ['id','title','author','genre','publicationDate' ,'language','nopage','description','images','date_created','date_updated']
+
+    def validate_title(self, value):
+        if not re.search(r'[a-zA-Z]', value):
+            raise serializers.ValidationError("Title must contain at least one alphabet.")
+        return value
+
+    def validate_author(self, value):
+        if not re.search(r'[a-zA-Z]', value):
+            raise serializers.ValidationError("Author name must contain at least one alphabet.")
+        return value
+
+    def validate_nopage(self, value):
+        if not isinstance(value, int):
+            raise serializers.ValidationError("Number of pages must be an integer.")
+        if value <= 0:
+            raise serializers.ValidationError("Number of pages must be greater than zero.")
+        return value
+
+    def validate_language(self, value):
+        if not re.match(r'^[a-zA-Z\s]+$', value):
+            raise serializers.ValidationError("Language must contain only alphabets.")
+        return value
+
+    def validate_genre(self, value):
+        if not value:
+            raise serializers.ValidationError("Genre is required.")
+        return value
+
+    def validate_description(self, value):
+        if len(value.strip()) < 5:
+            raise serializers.ValidationError("Description must be at least 5 characters long.")
+        return value
+

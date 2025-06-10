@@ -5,6 +5,8 @@ import PrivateRoute from './PrivateRoute';
 import UserHome from '../components/userpages/UserHome';
 import Register from '../components/indexpages/Register';
 import Home from '../components/indexpages/Home';
+import UserProfile from '../components/userpages/UserProfile';
+import UserAddBook from '../components/userpages/UserAddBook';
 
 
 function Layout() {
@@ -14,6 +16,8 @@ function Layout() {
     <Route path="loginpage" element={<Login/> } />
     <Route path='register' element={<Register/>} />
     <Route path='/userhome' element={<PrivateRoute><UserHome/></PrivateRoute>}/>
+    <Route path='/profile' element={<PrivateRoute><UserProfile/></PrivateRoute>} />
+    <Route path='/addbook' element={<PrivateRoute><UserAddBook/></PrivateRoute>} />
    </Routes>
   )
 }

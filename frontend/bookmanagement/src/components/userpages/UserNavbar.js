@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import { logoutUser, userDetails } from '../../redux/authSlices'
+import './button.css'
 
 function UserNavbar() {
     const dispatch = useDispatch()
@@ -10,13 +11,16 @@ function UserNavbar() {
     const handleLogout =()=>{
         dispatch(logoutUser(navigate))
     }
+    const handleRegister =()=>{
+        navigate('/addbook')
+    }
     useEffect (()=>{
         dispatch(userDetails())
     },[dispatch])
   return (
-    <nav className="navbar navbar-expand-lg" style={{backgroundColor: '#e3f2fd'}}>
+    <nav className="navbar navbar-expand-lg" style={{backgroundColor: '#e3f2fd',marginTop:"5px"}}>
     <div className="container">
-        <Link to="/" className="navbar-brand">BooksAPP</Link>
+        <Link to="/userhome" className="navbar-brand">BooksAPP</Link>
         <div className="dropdown">
                 <div className="dropdown-menu">
              
@@ -44,14 +48,14 @@ function UserNavbar() {
 
 
             <li className="nav-item">
-            <Link className="nav-link" to="">
-            <button type="button" className="btn btn-outline-secondary btn-sm">Register Your Book</button>
+            <Link className="nav-link" to="/addbook">
+            <button type="button" className="btn btn-outline-secondary btn-sm" onClick={handleRegister}>Register Your Book</button>
             </Link>
             </li>
              <li className="nav-item">
                         <Link className="nav-link " aria-current="page" to="">
                         <div style={{ position: "relative", display: "inline-block" }}>
-                 
+                       
                   
                 </div>
                         </Link>
@@ -60,7 +64,7 @@ function UserNavbar() {
 
 
 
-              <li className="nav-item dropdown position-relative">
+              {/* <li className="nav-item dropdown position-relative">
               <div style={{ padding: "5px 10px", margin: "0 10px", display: "inline-block" }}>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -95,7 +99,7 @@ function UserNavbar() {
                   </li>
                   
                 </ul>
-            </li>
+            </li> */}
 
 
 
@@ -105,11 +109,11 @@ function UserNavbar() {
                 </div>
             </li>
             
-            <li className="nav-item">
+            {/* <li className="nav-item">
            
             <button type="button" className="btn btn-secondary btn-sm nav-link"  onClick={handleLogout}>LogOut</button>
            
-            </li>
+            </li> */}
             <li className="nav-item dropdown">
             <button 
             className="nav-link dropdown-toggle"  role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -119,7 +123,7 @@ function UserNavbar() {
             <ul className="dropdown-menu" data-bs-auto-close="false">
               
                   <li>
-                    <Link className="dropdown-item" to="">
+                    <Link className="dropdown-item" to="/profile">
                       Profile
                     </Link>
                   </li>
@@ -144,15 +148,26 @@ function UserNavbar() {
                   <li>
                     <hr className="dropdown-divider" />
                   </li>
+                 
+                  
                   <li>
-                    <Link className='dropdown-item' to=''>
-                    Purchase History
-                    </Link>
-                  </li>
-                  <li>
-                    <Link className="dropdown-item" to="">
-                      Message
-                    </Link>
+                  <button class="cta" onClick={handleLogout} >
+                            <span class="hover-underline-animation"> Logout </span>
+                            <svg
+                                id="arrow-horizontal"
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="30"
+                                height="10"
+                                viewBox="0 0 46 16"
+                            >
+                                <path
+                                id="Path_10"
+                                data-name="Path 10"
+                                d="M8,0,6.545,1.455l5.506,5.506H-30V9.039H12.052L6.545,14.545,8,16l8-8Z"
+                                transform="translate(30)"
+                                ></path>
+                            </svg>
+                            </button>
                   </li>
                 </ul>
             </li>
