@@ -51,5 +51,25 @@ class Books(models.Model):
     nopage = models.BigIntegerField(blank=True, null=True)
     description = models.CharField(max_length=5000,blank=True,null=True)
     images = models.ImageField(upload_to=upload_to,null=True, blank=True)
+    is_deleted = models.BooleanField(default=False)
     date_created = models.DateField(auto_now_add=True)
     date_updated = models.DateField(auto_now=True)
+
+class Subscription(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    book = models.ForeignKey(Books,on_delete=models.CASCADE)
+    date = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    unsubscribe = models.BooleanField(default=False)
+
+class ReadList(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    book = models.ForeignKey(Books,on_delete=models.CASCADE)
+    date = models.DateTimeField(auto_now_add=True)
+    number = models.BigIntegerField(default=0)
+    def save(self, *args, **kwargs):
+        if self._state.adding and self.number == 0:
+            # Count how many ReadList entries this user already has
+            last_number = ReadList.objects.filter(user=self.user).count()
+            self.number = last_number + 1  # start from 1
+        super().save(*args, **kwargs)

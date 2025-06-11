@@ -128,21 +128,21 @@ function UserNavbar() {
                     </Link>
                   </li>
                   <li>
-                    <Link className="dropdown-item" to="">
-                      My Learnings
+                    <Link className="dropdown-item" to="/mybooks">
+                      My Books
                     </Link>
                   </li>
                   <li>
                     <hr className="dropdown-divider" />
                   </li>
                   <li>
-                    <Link className="dropdown-item" to="">
-                      Wishlist
+                    <Link className="dropdown-item" to="/subscription">
+                      Subscriptions
                     </Link>
                   </li>
                   <li>
-                    <Link className="dropdown-item" to="">
-                      Cart
+                    <Link className="dropdown-item" to="/readlist">
+                      Reading List
                     </Link>
                   </li>
                   <li>

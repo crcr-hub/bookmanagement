@@ -1,10 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
 import './RawPost.css'
 import axiosInstance from "../../redux/utils/axiosInstance";
+import { useNavigate } from "react-router-dom";
 
 function RawPost({ genre, title }) {
   const [books, setBooks] = useState([]);
+  const navigate = useNavigate()
   const scrollRef = useRef(null);
+
+  const handlieClick =(bid)=>{
+    navigate(`/book/${bid}`)
+  }
 
   useEffect(() => {
     axiosInstance.get(`/books/?genre=${genre}`)
@@ -36,6 +42,7 @@ function RawPost({ genre, title }) {
               alt={book.title}
               src={book.images} // Adjust domain as needed
               title={book.title} style={{height:"300px"}}
+              onClick={()=> handlieClick(book.id)}
             />
           ))}
         </div>

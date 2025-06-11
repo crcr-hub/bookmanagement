@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from rest_framework.exceptions import AuthenticationFailed
-from books.models import (User,Profile,Books)
+from books.models import (User,Profile,Books,Subscription,ReadList)
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from books.models import Profile, User
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -183,4 +183,36 @@ class BookSerializer(serializers.ModelSerializer):
         if len(value.strip()) < 5:
             raise serializers.ValidationError("Description must be at least 5 characters long.")
         return value
+
+class SubscriptionSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    book = serializers.PrimaryKeyRelatedField(queryset=Books.objects.all())
+
+    class Meta:
+        model = Subscription
+        fields = ['user', 'book', 'date', 'updated', 'unsubscribe']
+        read_only_fields = ['date', 'updated']
+
+
+class ReadListSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    book = BookSerializer(read_only=True)
+
+    class Meta:
+        model = ReadList
+        fields = ['user', 'book', 'date','number']
+        read_only_fields = ['date', ]
+
+class BookWithReadListSerializer(serializers.ModelSerializer):
+    isinreadlist = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Books
+        fields = ['id','title','author','genre','publicationDate' ,'language','nopage','description','images','date_created','date_updated', 'isinreadlist']
+
+    def get_isinreadlist(self, obj):
+        user = self.context.get('user')
+        if not user or user.is_anonymous:
+            return False
+        return ReadList.objects.filter(user=user, book=obj).exists()
 

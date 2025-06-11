@@ -2,6 +2,8 @@ import React from 'react'
 import Navbar from './Navbar'
 import bgimage1 from '../../assets/images/bgimage1.jpg'
 import Carosel from './Carosel'
+import RawPost from '../userpages/RawPost'
+import UserFooter from '../userpages/UserFooter'
 
 function Home() {
   return (
@@ -36,13 +38,12 @@ function Home() {
       }}
     >
 
-<div style={{ minHeight: '200vh' }}>
+<div >
         <Carosel/>
-        <h2>Welcome to the Home Page</h2>
-        <p>Scroll down to see the effect. The navbar and background remain fixed.</p>
-        {/* Add your actual page content here */}
+        <RawPost genre="Fiction" title="Fiction  Books" />
+        <RawPost genre="Crime" title="Crime  Books" />
       </div>
-      
+      <UserFooter/>
     </div>
   </div>
   )

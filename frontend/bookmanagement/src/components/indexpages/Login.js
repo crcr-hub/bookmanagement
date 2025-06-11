@@ -43,7 +43,7 @@ const [backendError, setBackendError] = useState('');
         <Navbar/>
     <MDBContainer className='my-5'>
     <MDBCard>
-      <MDBRow className='g-0 d-flex align-items-center'>
+      <MDBRow className='g-0 d-flex align-items-center' style={{color:"black"}}>
         <MDBCol md='4'>
           <MDBCardImage src={image1} alt='phone' className='rounded-t-5 rounded-tr-lg-0' fluid />
         </MDBCol>
@@ -58,8 +58,6 @@ const [backendError, setBackendError] = useState('');
                         if (backendError) {
                             setBackendError('')
                           }
-                          
-                
                         setUsername(e.target.value)}} />
                         <MDBInput wrapperClass='mb-4' label='Password' id='form2' type='password' value={password}
                     onChange={(e) => 
@@ -75,10 +73,10 @@ const [backendError, setBackendError] = useState('');
                         </div>
  
                         {backendError && (
-  <div className="alert alert-danger py-1 mb-2" role="alert">
-    {backendError}
-  </div>
-)}
+                            <div className="alert alert-danger py-1 mb-2" role="alert">
+                                {backendError}
+                            </div>
+                            )}
                 <button type='submit'
                   className="btn btn-primary mb-4 w-100" 
                   style={{

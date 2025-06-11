@@ -23,7 +23,7 @@ function Navbar() {
         <ul className="navbar-nav ms-auto mb-2 mb-lg-0"   >
 
         <li className="nav-item">
-            <Link to='/teacherregister' className="nav-link " aria-current="page" >
+            <Link  className="nav-link " aria-current="page" >
            
             </Link>
             </li>

@@ -3,7 +3,7 @@ import UserFooter from './UserFooter'
 import UserNavbar from './UserNavbar'
 import bgimage1 from '../../assets/images/bgimage1.jpg'
 import Cropper from 'react-easy-crop';
-import { Form, useNavigate } from 'react-router-dom';
+import {  useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { addBook } from '../../redux/authSlices';
 
@@ -34,6 +34,7 @@ function UserAddBook() {
       };
     
       const handleFileChange = (e) => {
+
         const file = e.target.files[0];
         if (file) {
           const reader = new FileReader();
@@ -70,7 +71,10 @@ function UserAddBook() {
                 croppedAreaPixels.height
               );
               canvas.toBlob((blob) => {
-                
+                if (!blob) {
+                    setErrors({ image: "Cropping failed or unsupported image format." });
+                    return;
+                  }
                 const croppedFile = new File([blob], 'cropped-image.jpg', { type: 'image/jpeg' });
                 const previewUrl = URL.createObjectURL(blob); // Preview URL
                 resolve({ croppedFile, previewUrl });
@@ -144,6 +148,7 @@ function UserAddBook() {
         }else if (!hasAlphabets(bookeData.description)) {
         newErrors.description = "Description  must contain at least one alphabet";
         } 
+        if (!image){newErrors.image = "Image is Required"}
         
        
         setErrors(newErrors);
@@ -155,11 +160,11 @@ function UserAddBook() {
   const [backendError, setBackendError] = useState('');
       const handleSubmit =  async (e) =>{
         e.preventDefault();
-       
+        if (validate()){
             const croppedImage = await getCroppedImage();
             setBookData ({...bookeData,image:croppedImage.croppedFile});
             const updateBookData = {...bookeData,image:croppedImage.croppedFile}
-            if (validate()){
+           
                 const resultAction = await dispatch(addBook(updateBookData))
                  if (addBook.rejected.match(resultAction)) {
                                 const payload = resultAction.payload;
@@ -456,9 +461,17 @@ function UserAddBook() {
                                 <div className="col-mb-6" style={{marginBottom:"20px"}}>
                                             <label htmlFor="formFileMultiple" className="form-label">
 
-                                            Select Image
+                                            {
+                              errors.image ? (
+                                <span style={{ color: "red" }}>{errors.image}</span>) : ("Select Image" )
+                            }
                                             </label>
-                                            <input className="form-control" type="file" accept="images/*"  onChange={handleFileChange} />
+                                            <input className="form-control" type="file" accept="image/*"      onChange={(e) => {
+                                                if (errors.image) {
+                                                    setErrors({ ...errors, image: "" });
+                                                }
+                                                handleFileChange(e); // ✅ This will actually call your handler
+                                                }} />
                                         
                                             </div>
                                             <div className="col-mb-6">

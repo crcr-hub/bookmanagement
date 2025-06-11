@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axiosInstance from './utils/axiosInstance';
+import { act } from 'react';
 
 export const loginUser = createAsyncThunk('auth/loginUser', async ({username,password,navigate}, { rejectWithValue }) => {
   try {
@@ -95,6 +96,168 @@ export const updateUserProfile = createAsyncThunk('user/updateStudentProfile',
     }
   )
 
+
+//----------Get my books--------------------
+export const getMyBooks = createAsyncThunk('books/getMyBooks',
+    async(_,{rejectWithValue})=>{
+        try{
+            const response = await axiosInstance.get('/getbooks/')
+            return response.data
+        }catch(error){
+            return rejectWithValue(error.response?.data || 'Failed to fetcg the details')
+        }
+    }
+)
+//................update a book.................
+export const updateBook =createAsyncThunk('book/updateBook',
+    async(bid,{rejectWithValue}) =>{
+        try{
+            const response = await axiosInstance.get(`/update/${bid}`);
+            return response.data
+        }catch(error){
+            return rejectWithValue(error.response?.data || 'Failed to get the book Details')
+        }
+
+    }
+)
+
+export const updateBookDetails =createAsyncThunk('book/updateBookDetails',
+    async({ bid, updatedBookData },{rejectWithValue}) =>{
+        try{
+            const formData = new FormData();
+      
+            // Append regular data
+            formData.append('title', updatedBookData.title);
+            formData.append('description', updatedBookData.description);
+            formData.append('author', updatedBookData.author);
+            formData.append('genre', updatedBookData.genre);
+            formData.append('publicationDate',updatedBookData.publicationDate)
+            formData.append('language', updatedBookData.language);
+            if (!isNaN(parseInt(updatedBookData.nopages))) {
+                formData.append('nopage', parseInt(updatedBookData.nopages));
+            }
+           
+            
+            // Append image (if any)
+            if (updatedBookData.images && updatedBookData.images instanceof File) {
+                formData.append('images', updatedBookData.images);
+              }
+            const response = await axiosInstance.put(`/update/${bid}`,formData,{
+                headers: {
+                  'Content-Type': 'multipart/form-data', // Ensure the correct content type
+                },
+              });
+            return response.data
+        }catch(error){
+            return rejectWithValue(error.response?.data || 'Failed to get the book Details')
+        }
+
+    }
+)
+// -----------------------------------------Delete a book------------------------------
+
+export const deleteBook = createAsyncThunk('book/deleteBook',
+    async(bid,{rejectWithValue})=>{
+        try{
+            const response = await axiosInstance.delete(`/update/${bid}`);
+            return response.data
+        }catch(error){
+            return rejectWithValue(error.response?.data || "Failed to delete book")
+        }
+    }
+)
+//.................Single Book Details..................
+export const bookDetail = createAsyncThunk('book/bookDetail',
+    async(bid,{rejectWithValue})=>{
+        try{
+            const response = await axiosInstance.get(`/bookdetail/${bid}`);
+            return response.data
+        }catch(error){
+            return rejectWithValue(error.response?.data || "Failed to fetch book")
+        }
+    }
+)
+//.........................Subscribe Book............
+
+export const subscribeBook = createAsyncThunk('book/subscribeBook',
+    async(bid,{rejectWithValue})=>{
+        try{
+            const response = await axiosInstance.post(`/bookdetail/${bid}`);
+            return response.data
+        }catch(error){
+            return rejectWithValue(error.response?.data || "Failed to subscribe book")
+        }
+    }
+)
+
+
+export const subscriptionList = createAsyncThunk('book/subscriptionList',
+    async(_,{rejectWithValue})=>{
+        try{
+            const response = await axiosInstance.get('/subscription/');
+            return response.data
+        }catch(error){
+            return rejectWithValue(error.response?.data || "Failed to fetch subscription")
+        }
+    }
+)
+
+//------------------ Get add and update  readlist -  ---------------------------
+export const getReadList = createAsyncThunk('book/getReadList',
+    async(_,{rejectWithValue})=>{
+        try{
+            const response = await axiosInstance.get('/read/');
+            return response.data
+        }catch(error){
+            return rejectWithValue(error.response?.data || "Failed to fetch readlist")
+        }
+    }
+)
+
+export const addToReadlist = createAsyncThunk('book/addToReadlist',
+    async(bid,{rejectWithValue})=>{
+        try{
+            const response = await axiosInstance.post(`/readlist/${bid}`);
+            return response.data
+        }catch(error){
+            return rejectWithValue(error.response?.data || "Failed to add books")
+        }
+    }
+)
+
+export const removeReadlist = createAsyncThunk('book/addToReadlist',
+    async(bid,{rejectWithValue})=>{
+        try{
+            const response = await axiosInstance.delete(`/readlist/${bid}`);
+            return response.data
+        }catch(error){
+            return rejectWithValue(error.response?.data || "Failed to remove books")
+        }
+    }
+)
+
+export const moveUp = createAsyncThunk('book/moveUp',
+    async(bid,{rejectWithValue})=>{
+        try{
+            const response = await axiosInstance.post(`/readlist/${bid}/moveup/`);
+            return response.data
+        }catch(error){
+            return rejectWithValue(error.response?.data || "Failed to  update")
+        }
+    }
+)
+export const moveDown = createAsyncThunk('book/moveDown',
+    async(bid,{rejectWithValue})=>{
+        try{
+            const response = await axiosInstance.post(`/readlist/${bid}/movedown/`);
+            return response.data
+        }catch(error){
+            return rejectWithValue(error.response?.data || "Failed to  update")
+        }
+    }
+)
+
+
 export const logoutUser = (navigate) => async (dispatch) => {
     try {
         const refreshToken = localStorage.getItem('refresh');
@@ -122,6 +285,11 @@ const authSlice = createSlice({
     isAuthenticated: !!localStorage.getItem('access'),
     user_details : null,
     user_profile : null,
+    mybooks : null,
+    bookdetails:null,
+    singlebook : [],
+    subscriptionBooks : [],
+    readList : [],
   },
   reducers: {
     logout: (state) => {
@@ -135,6 +303,48 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+     
+      .addCase(getReadList.pending,(state)=>{
+        state.loading = true;
+        state.error = null
+      })
+      .addCase(getReadList.fulfilled,(state,action)=>{
+        state.loading = false;
+        state.readList = action.payload;
+      })
+      
+      .addCase(subscriptionList.pending,(state)=>{
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(subscriptionList.fulfilled,(state,action)=>{
+        state.loading = false;
+        state.subscriptionBooks = action.payload
+      })
+      .addCase(bookDetail.pending,(state)=>{
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(bookDetail.fulfilled,(state,action)=>{
+        state.loading = false;
+        state.singlebook = action.payload;
+      })
+      .addCase(updateBook.pending,(state)=>{
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateBook.fulfilled,(state,action)=>{
+        state.loading = false;
+        state.bookdetails = action.payload;
+      })
+      .addCase(getMyBooks.pending,(state)=>{
+        state.loading = true;
+        state.error = null
+      })
+      .addCase(getMyBooks.fulfilled,(state,action)=>{
+        state.loading = false;
+        state.mybooks = action.payload;
+      })
 
       .addCase(userProfile.pending,(state)=>{
         state.loading = true;

@@ -108,7 +108,7 @@ function Register() {
                   }
                   setErrors(newErrors)
               } else {
-                navigate('loginpage')
+                navigate('/loginpage')
               }
             
           }
@@ -120,7 +120,7 @@ function Register() {
         <Navbar/>
        <MDBContainer fluid className='my-5'>
  <form onSubmit={handleSubmit}>
-      <MDBRow className='g-0 align-items-center'  style={{ marginTop: "-80px", position: "relative" }}>
+      <MDBRow className='g-0 align-items-center'  style={{ marginTop: "-80px", position: "relative" ,color:'black' }}>
         
         
       <MDBCol col='4' style={{marginTop:"-100px"}}>
@@ -133,7 +133,7 @@ function Register() {
           <MDBCard className='my-5 cascading-right' style={{background: 'hsla(0, 0%, 100%, 0.55)',  backdropFilter: 'blur(30px)'}}>
             <MDBCardBody className='p-1 shadow-5 text-center' > 
               <h2 className="fw-bold mb-5">SignUp</h2>
-              <MDBRow>
+              <MDBRow  style={{color:"black"}}>
                 <MDBCol col='4'>
               
                   <MDBInput wrapperClass='mb-2' label=
@@ -205,7 +205,7 @@ function Register() {
     </MDBCol>
 
               </MDBRow>
-              <MDBRow>
+              <MDBRow style={{color:'black'}}>
               
 
 
