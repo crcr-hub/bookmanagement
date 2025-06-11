@@ -47,9 +47,18 @@ function UserHome() {
 
 {/* <div style={{ minHeight: '200vh' }}> */}
 <div>
+
         <Carosel/>
-        <RawPost genre="Fiction" title="Fiction  Books" />
-        <RawPost genre="Crime" title="Crime  Books" />
+        <RawPost genre="Fiction" title="Fiction" />
+        <RawPost genre="Crime" title="Crime" />
+        <RawPost genre="kids" title="Kids" />
+        <RawPost genre="Thriller" title="Thriller" />
+        <RawPost genre="Classic" title="Classic" />
+        <RawPost genre="Romance" title="Romance" />
+        <RawPost genre="Textbooks" title="Textbooks"/>
+
+
+
       </div>
       <UserFooter/>
     </div>

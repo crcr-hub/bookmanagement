@@ -303,13 +303,14 @@ function UserAddBook() {
                                   }
                             }} >
                                          <option value="">Choose...</option>
-                                         <option value="Fiction">Fiction</option>
                                          <option value="Classic">Classic</option>
                                          <option value="Crime">Crime</option>
-                                         <option value="Romance">Romance</option>
+                                         <option value="Comic">Comic</option>
+                                         <option value="Fiction">Fiction</option>
                                          <option value="Kids">kids</option>
-                                         <option value="Thriller">Thriller</option>
+                                         <option value="Romance">Romance</option>
                                          <option value="Textbooks">Text Books</option>
+                                         <option value="Thriller">Thriller</option>
                                          </select>
                             </div>
 
@@ -470,7 +471,7 @@ function UserAddBook() {
                                                 if (errors.image) {
                                                     setErrors({ ...errors, image: "" });
                                                 }
-                                                handleFileChange(e); // ✅ This will actually call your handler
+                                                handleFileChange(e); 
                                                 }} />
                                         
                                             </div>

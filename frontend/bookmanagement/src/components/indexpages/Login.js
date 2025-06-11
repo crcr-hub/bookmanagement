@@ -41,64 +41,87 @@ const [backendError, setBackendError] = useState('');
   return (
     <div>
         <Navbar/>
-    <MDBContainer className='my-5'>
-    <MDBCard>
-      <MDBRow className='g-0 d-flex align-items-center' style={{color:"black"}}>
-        <MDBCol md='4'>
-          <MDBCardImage src={image1} alt='phone' className='rounded-t-5 rounded-tr-lg-0' fluid />
-        </MDBCol>
-                    <MDBCol md='6'>
-                    <div style={{ marginLeft: '100px' }} >
-                    <h2 className="fw-bold mb-5">SignIn</h2>
-                    <MDBCardBody >
-                    <form onSubmit={handleSubmit}>
-                        <MDBInput wrapperClass='mb-4' label='User Name' id='form1' type='text' value={username}
-                    onChange={(e) => { 
+        <div className="container my-5">
+        <div className="card">
+          <div className="row g-0 align-items-center" style={{ color: 'black' }}>
+            <div className="col-md-4">
+              <img src={image1} alt="phone" className="img-fluid rounded-start" style={{width:"90%"}} />
+            </div>
 
-                        if (backendError) {
-                            setBackendError('')
-                          }
-                        setUsername(e.target.value)}} />
-                        <MDBInput wrapperClass='mb-4' label='Password' id='form2' type='password' value={password}
-                    onChange={(e) => 
-                    {
-                        if (backendError) {
-                            setBackendError('')
-                          }
-                    setPassword(e.target.value)}} />
-
-                        <div className="d-flex justify-content-between mx-4 mb-4">
-                        <MDBCheckbox name='flexCheck' value='' id='flexCheckDefault' label='Remember me' />
-                        <Link to={"/forgotpwd"}>Forgot password?</Link>
-                        </div>
- 
-                        {backendError && (
-                            <div className="alert alert-danger py-1 mb-2" role="alert">
-                                {backendError}
-                            </div>
-                            )}
-                <button type='submit'
-                  className="btn btn-primary mb-4 w-100" 
-                  style={{
-                    transform: 'none',
-                    boxShadow: 'none',
-                    transition: 'none'
-                  }}
-                >
-                  Sign in
-                </button>
-                <div className="text-center" >
-                               <Link  to="/register"><p>Don't have an Account? SignUp Here</p></Link> 
-                </div>
-                    </form>
-                    </MDBCardBody>
+            <div className="col-md-6 offset-md-1">
+              <div style={{ marginLeft: '40px' }}>
+                <h2 className="fw-bold mb-4">Sign In</h2>
+                <div className="card-body">
+                  <form onSubmit={handleSubmit}>
+                    <div className="mb-3">
+                      <label htmlFor="form1" className="form-label">User Name</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="form1"
+                        value={username}
+                        onChange={(e) => {
+                          if (backendError) setBackendError('');
+                          setUsername(e.target.value);
+                        }}
+                      />
                     </div>
-                    </MDBCol>
 
-      </MDBRow>
+                    <div className="mb-3">
+                      <label htmlFor="form2" className="form-label">Password</label>
+                      <input
+                        type="password"
+                        className="form-control"
+                        id="form2"
+                        value={password}
+                        onChange={(e) => {
+                          if (backendError) setBackendError('');
+                          setPassword(e.target.value);
+                        }}
+                      />
+                    </div>
 
-    </MDBCard>
-  </MDBContainer>
+                    <div className="d-flex justify-content-between mb-3">
+                      <div className="form-check">
+                        <input className="form-check-input" type="checkbox" id="rememberCheck" />
+                        <label className="form-check-label" htmlFor="rememberCheck">
+                          Remember me
+                        </label>
+                      </div>
+                      <Link to="/forgotpwd" className="text-decoration-none">Forgot password?</Link>
+                    </div>
+
+                    {backendError && (
+                      <div className="alert alert-danger py-1 mb-3" role="alert">
+                        {backendError}
+                      </div>
+                    )}
+
+                    <button
+                      type="submit"
+                      className="btn btn-primary w-100 mb-3"
+                      style={{
+                        transform: 'none',
+                        boxShadow: 'none',
+                        transition: 'none'
+                      }}
+                    >
+                      Sign in
+                    </button>
+
+                    <div className="text-center">
+                      <Link to="/register" className="text-decoration-none">
+                        Don't have an Account? Sign Up Here
+                      </Link>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
   </div>
   )
 }
