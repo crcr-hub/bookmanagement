@@ -233,6 +233,11 @@ class ReadListBook(APIView):
         readlist_item = ReadList.objects.filter(user=user, book=book).first()
         if readlist_item:
             readlist_item.delete()
+            remaining_items = ReadList.objects.filter(user=user).order_by('number')
+            for index, item in enumerate(remaining_items, start=1):
+                if item.number != index:
+                    item.number = index
+                    item.save(update_fields=["number"])
             return Response({"message": "Book removed from your read list."}, status=status.HTTP_204_NO_CONTENT)
         else:
             return Response({"error": "Book is not in your read list."}, status=status.HTTP_404_NOT_FOUND)
