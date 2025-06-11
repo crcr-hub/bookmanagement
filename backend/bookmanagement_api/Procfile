@@ -1,0 +1,1 @@
+web: gunicorn bookmanagement_api.wsgi:application 
