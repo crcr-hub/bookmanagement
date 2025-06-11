@@ -68,7 +68,8 @@ function UserSubscription() {
                 {subscriptionBooks && subscriptionBooks.length > 0 ?(
                      subscriptionBooks.map((book, index) => (
                         <div key={book.id || index} className="col-md-3 mb-4">
-                        <div className="card h-100" style={{cursor:"pointer"}} onClick={()=> handlieClick(book.id)}>
+                        <div className="card h-100"  >
+                            <div style={{cursor:"pointer",height:"90%"}} onClick={()=> handlieClick(book.id)}>
                             <img src={book.images ? `http://127.0.0.1:8000${book.images}` : '/default-book.jpg'} className="card-img-top" alt={book.title}/>
                             <div className="card-body">
                             <h5 className="card-title">{book.title.length > 25 ?(
@@ -77,6 +78,7 @@ function UserSubscription() {
                                 book.title
                             )}</h5>
                             <p className="card-text">{book.author}</p>
+                            </div>
                             </div>
                             <div>
                                 {book.isinreadlist?(
