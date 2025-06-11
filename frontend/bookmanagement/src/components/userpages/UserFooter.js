@@ -1,158 +1,80 @@
 import React from 'react'
-import {
-    MDBFooter,
-    MDBContainer,
-    MDBIcon,
-    MDBInput,
-    MDBCol,
-    MDBRow,
-    MDBBtn
-  } from 'mdb-react-ui-kit';
 
 function UserFooter() {
   return (
-    <MDBFooter className='text-center' color='white' bgColor='dark'>
-      <MDBContainer className='p-4'>
-        <section className='mb-4'>
-          <MDBBtn outline color="light" floating className='m-1' href='#!' role='button'>
-            <MDBIcon fab icon='facebook-f' />
-          </MDBBtn>
+    <footer className="text-center text-lg-start bg-dark text-white pt-4">
+    <div className="container p-4">
 
-          <MDBBtn outline color="light" floating className='m-1' href='#!' role='button'>
-            <MDBIcon fab icon='twitter' />
-          </MDBBtn>
+      {/* Social media buttons */}
+      <section className="mb-4">
+        {["facebook", "twitter", "google", "instagram", "linkedin", "github"].map((platform) => (
+          <a
+            key={platform}
+            className="btn btn-outline-light btn-floating m-1"
+            href="#!"
+            role="button"
+          >
+            <i className={`fab fa-${platform}`}></i>
+          </a>
+        ))}
+      </section>
 
-          <MDBBtn outline color="light" floating className='m-1' href='#!' role='button'>
-            <MDBIcon fab icon='google' />
-          </MDBBtn>
+      {/* Newsletter form */}
+      <section className="">
+        <form>
+          <div className="row d-flex justify-content-center">
+            <div className="col-auto">
+              <p className="pt-2">
+                <strong>Sign up for our newsletter</strong>
+              </p>
+            </div>
 
-          <MDBBtn outline color="light" floating className='m-1' href='#!' role='button'>
-            <MDBIcon fab icon='instagram' />
-          </MDBBtn>
+            <div className="col-md-5 col-12">
+              <div className="form-outline form-white mb-4">
+                <input type="email" id="form5Example2" className="form-control" placeholder="Email address" />
+              </div>
+            </div>
 
-          <MDBBtn outline color="light" floating className='m-1' href='#!' role='button'>
-            <MDBIcon fab icon='linkedin-in' />
-          </MDBBtn>
+            <div className="col-auto">
+              <button type="submit" className="btn btn-outline-light mb-4">
+                Subscribe
+              </button>
+            </div>
+          </div>
+        </form>
+      </section>
 
-          <MDBBtn outline color="light" floating className='m-1' href='#!' role='button'>
-            <MDBIcon fab icon='github' />
-          </MDBBtn>
-        </section>
+      {/* Description */}
+      <section className="mb-4">
+        <p>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt distinctio earum repellat quaerat
+          voluptatibus placeat nam, commodi optio pariatur est quia magnam eum harum corrupti dicta, aliquam
+          sequi voluptate quas.
+        </p>
+      </section>
 
-        <section className=''>
-          <form action=''>
-            <MDBRow className='d-flex justify-content-center'>
-              <MDBCol size="auto">
-                <p className='pt-2'>
-                  <strong>Sign up for our newsletter</strong>
-                </p>
-              </MDBCol>
-
-              <MDBCol md='5' start>
-                <MDBInput contrast type='email' label='Email address' className='mb-4' />
-              </MDBCol>
-
-              <MDBCol size="auto">
-                <MDBBtn outline color='light' type='submit' className='mb-4'>
-                  Subscribe
-                </MDBBtn>
-              </MDBCol>
-            </MDBRow>
-          </form>
-        </section>
-
-        <section className='mb-4'>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt distinctio earum repellat quaerat
-            voluptatibus placeat nam, commodi optio pariatur est quia magnam eum harum corrupti dicta, aliquam
-            sequi voluptate quas.
-          </p>
-        </section>
-
-        <section className=''>
-          <MDBRow>
-            <MDBCol lg='3' md='6' className='mb-4 mb-md-0'>
-              <h5 className='text-uppercase'>Links</h5>
-
-              <ul className='list-unstyled mb-0'>
-                <li>
-                  <a href='#!' className='text-white'>
-                    Link 1
-                  </a>
-                </li>
-                <li>
-                  <a href='#!' className='text-white'>
-                    Link 2
-                  </a>
-                </li>
-               
+      {/* Links */}
+      <section>
+        <div className="row">
+          {[1, 2, 3, 4].map((col) => (
+            <div key={col} className="col-lg-3 col-md-6 mb-4 mb-md-0">
+              <h5 className="text-uppercase">Links</h5>
+              <ul className="list-unstyled mb-0">
+                <li><a href="#!" className="text-white">Link 1</a></li>
+                <li><a href="#!" className="text-white">Link 2</a></li>
               </ul>
-            </MDBCol>
+            </div>
+          ))}
+        </div>
+      </section>
 
-            <MDBCol lg='3' md='6' className='mb-4 mb-md-0'>
-              <h5 className='text-uppercase'>Links</h5>
+    </div>
 
-              <ul className='list-unstyled mb-0'>
-                <li>
-                  <a href='#!' className='text-white'>
-                    Link 1
-                  </a>
-                </li>
-                <li>
-                  <a href='#!' className='text-white'>
-                    Link 2
-                  </a>
-                </li>
-                
-              </ul>
-            </MDBCol>
-
-            <MDBCol lg='3' md='6' className='mb-4 mb-md-0'>
-              <h5 className='text-uppercase'>Links</h5>
-
-              <ul className='list-unstyled mb-0'>
-                <li>
-                  <a href='#!' className='text-white'>
-                    Link 1
-                  </a>
-                </li>
-                <li>
-                  <a href='#!' className='text-white'>
-                    Link 2
-                  </a>
-                </li>
-               
-              </ul>
-            </MDBCol>
-
-            <MDBCol lg='3' md='6' className='mb-4 mb-md-0'>
-              <h5 className='text-uppercase'>Links</h5>
-
-              <ul className='list-unstyled mb-0'>
-                <li>
-                  <a href='#!' className='text-white'>
-                    Link 1
-                  </a>
-                </li>
-                <li>
-                  <a href='#!' className='text-white'>
-                    Link 2
-                  </a>
-                </li>
-                
-              </ul>
-            </MDBCol>
-          </MDBRow>
-        </section>
-      </MDBContainer>
-
-      <div className='text-center p-3' style={{ backgroundColor: 'rgba(0, 0, 0, 0.2)' }}>
-        ©  Copyright:
-        <a className='text-white' href='https://mdbootstrap.com/'>
-          booksapp.com
-        </a>
-      </div>
-    </MDBFooter>
+    <div className="text-center p-3" style={{ backgroundColor: "rgba(0, 0, 0, 0.2)" }}>
+      © Copyright:
+      <a className="text-white ms-1" href="https://mdbootstrap.com/">booksapp.com</a>
+    </div>
+  </footer>
   )
 }
 

@@ -4,17 +4,7 @@ import { loginUser } from '../../redux/authSlices';
 import { Link, useNavigate } from 'react-router-dom';
 import Navbar from './Navbar';
 import image1 from '../../assets/images/image1.jpg'
-import {
-    MDBContainer,
-    MDBCard,
-    MDBCardBody,
-    MDBCardImage,
-    MDBRow,
-    MDBCol,
-    MDBInput,
-    MDBCheckbox
-  }
-  from 'mdb-react-ui-kit';
+
 
 function Login() {
   const [username, setUsername] = useState('');  // Local state for email

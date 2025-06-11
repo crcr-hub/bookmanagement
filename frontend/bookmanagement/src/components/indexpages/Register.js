@@ -1,14 +1,5 @@
 import React, { useState } from 'react'
 import Navbar from './Navbar';
-import {
-    MDBContainer,
-    MDBCard,
-    MDBCardBody,
-    MDBInput,
-    MDBRow,
-    MDBCol,
-  }
-  from 'mdb-react-ui-kit';
 import { useDispatch } from 'react-redux';
 import {  Link, useNavigate } from 'react-router-dom';
 import image2 from '../../assets/images/image2.jpg'
@@ -130,7 +121,7 @@ function Register() {
                 <div className="card-body text-center">
                   <h2 className="fw-bold mb-4">Sign Up</h2>
 
-                  <div className="row mb-3">
+                  <div className="row mb-3" style={{color:"black"}}>
                     <div className="col-md-4 mb-2">
                       <label className="form-label">
                         {errors.firstName ? <span className="text-danger">{errors.firstName}</span> : "First Name"}
@@ -181,7 +172,7 @@ function Register() {
                     </div>
                   </div>
 
-                  <div className="row mb-3">
+                  <div className="row mb-3" style={{color:"black"}}>
                     <div className="col-md-6 mb-2">
                       <label className="form-label">
                         {errors.place ? <span className="text-danger">{errors.place}</span> : "Place"}
