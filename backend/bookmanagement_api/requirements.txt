@@ -1,4 +1,4 @@
-setuptools>=60
+setuptools>=65
 wheel
 pip
 asgiref==3.8.1
