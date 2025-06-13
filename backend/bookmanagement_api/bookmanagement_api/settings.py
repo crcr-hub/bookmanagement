@@ -28,11 +28,7 @@ SECRET_KEY = 'django-insecure-*p7o0)v&_pu+)xv1gex#3yvnwqu7&%jx!t1-1g^sj42(u87ie+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = [
-     "https://bookmanagement-flame.vercel.app",
-    "https://bookapp.solutions",
-]
-
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
