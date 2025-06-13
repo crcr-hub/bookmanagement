@@ -1,6 +1,4 @@
-setuptools>=65
-wheel
-pip
+
 asgiref==3.8.1
 Brotli==1.1.0
 certifi==2023.7.22
