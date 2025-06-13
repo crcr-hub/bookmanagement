@@ -4,6 +4,7 @@ import bgimage1 from '../../assets/images/bgimage1.jpg'
 import Carosel from './Carosel'
 import RawPost from '../userpages/RawPost'
 import UserFooter from '../userpages/UserFooter'
+import IndexRawPost from './IndexRawPost'
 
 function Home() {
   return (
@@ -40,8 +41,8 @@ function Home() {
 
 <div >
         <Carosel/>
-        <RawPost genre="Fiction" title="Fiction  Books" />
-        <RawPost genre="Crime" title="Crime  Books" />
+        <IndexRawPost genre="Fiction" title="Fiction  Books" />
+        <IndexRawPost genre="Crime" title="Crime  Books" />
       </div>
       <UserFooter/>
     </div>

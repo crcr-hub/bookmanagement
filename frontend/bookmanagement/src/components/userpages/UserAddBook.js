@@ -305,7 +305,6 @@ function UserAddBook() {
                                          <option value="">Choose...</option>
                                          <option value="Classic">Classic</option>
                                          <option value="Crime">Crime</option>
-                                         <option value="Comic">Comic</option>
                                          <option value="Fiction">Fiction</option>
                                          <option value="Kids">kids</option>
                                          <option value="Romance">Romance</option>
@@ -468,11 +467,24 @@ function UserAddBook() {
                             }
                                             </label>
                                             <input className="form-control" type="file" accept="image/*"      onChange={(e) => {
-                                                if (errors.image) {
+                                                const file = e.target.files[0];
+                                                if (file) {
+                                                    const isJPG = file.type === "image/jpeg" || file.name.toLowerCase().endsWith('.jpg');
+
+                                                    if (!isJPG) {
+                                                    setErrors({ ...errors, image: "Unsopported File" });
+                                                    return;
+                                                    }
+
+                                                    // Clear previous errors
+                                                    if (errors.image) {
                                                     setErrors({ ...errors, image: "" });
+                                                    }
+
+                                                    handleFileChange(e); // Your existing logic
                                                 }
-                                                handleFileChange(e); 
-                                                }} />
+                                                }}
+                                                />
                                         
                                             </div>
                                             <div className="col-mb-6">

@@ -107,12 +107,20 @@ class UserProfile(APIView):
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
+
+class GetIndexBooks(APIView):
+    def get(self, request):
+        genre = request.query_params.get('genre')
+        books = Books.objects.all()
+        if genre:
+            books = books.filter(genre__iexact=genre,is_deleted= False)
+        serializer = BookSerializer(books, many=True, context={'request': request})
+        return Response(serializer.data)
+    
+
 class BookView(APIView):
     parser_classes = [MultiPartParser, FormParser]
-    def get_permissions(self):
-        if self.request.method == 'POST':
-            return [IsAuthenticated()]
-        return [AllowAny()]
+    permission_classes = [IsAuthenticated]
     
     def post(self,request):
         serializer = BookSerializer(data=request.data)
