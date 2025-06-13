@@ -21,7 +21,7 @@ djangorestframework-simplejwt==5.3.1
 filelock==3.12.4
 fonttools==4.51.0
 html5lib==1.1
-numpy==1.24.4
+numpy==1.26.4
 pillow==10.3.0
 pipenv==2023.9.8
 platformdirs==3.10.0
