@@ -34,6 +34,7 @@ ALLOWED_HOSTS = [
     "www.bookapp.solutions",
      "127.0.0.1",
     "localhost",
+    'api.bookapp.solutions',
 
 ]
 
