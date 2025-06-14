@@ -20,7 +20,7 @@ export default function UserProfile() {
         place: "",
         mobile: "",
     })
-    console.log("profile",profileData)
+
     const [passwordData, setPasswordData] = useState({
         current_password: "",
         new_password: "",

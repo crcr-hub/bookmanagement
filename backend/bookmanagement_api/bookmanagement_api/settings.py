@@ -33,7 +33,10 @@ ALLOWED_HOSTS = [
     "bookapp.solutions",
     "www.bookapp.solutions",
     "127.0.0.1",
-    "localhost",
+    "localhost:3000",
+     "http://localhost:3000",
+    
+    
 
 ]
 
@@ -173,7 +176,12 @@ STATIC_ROOT = BASE_DIR / "static"
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CORS_ALLOWED_ORIGINS = ['https://bookmanagement-flame.vercel.app']
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "https://bookapp.solutions",
+    "https://www.bookapp.solutions"
+]
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days = 1),

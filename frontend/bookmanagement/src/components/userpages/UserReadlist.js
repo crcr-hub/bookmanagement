@@ -99,7 +99,7 @@ function UserReadlist() {
               <img  onClick={()=> handlieClick(item.book.id)}
                 src={
                   item.book.images
-                    ? `http://127.0.0.1:8000${item.book.images}`
+                    ? `https://bookapp.solutions${item.book.images}`
                     : '/default-book.jpg'
                 }
                 alt={item.book.title}

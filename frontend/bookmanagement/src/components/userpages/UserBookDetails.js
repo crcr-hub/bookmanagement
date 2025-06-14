@@ -87,7 +87,7 @@ function UserBookDetails() {
                                 }}
                                 >
                                 <img
-                                    src={singlebook.book && singlebook.book.images ? `http://127.0.0.1:8000${singlebook.book.images}` : '/default-book.jpg'}
+                                    src={singlebook.book && singlebook.book.images ? `https://bookapp.solutions${singlebook.book.images}` : '/default-book.jpg'}
                                     alt="Preview"
                                     style={{
                                     height: "450px",

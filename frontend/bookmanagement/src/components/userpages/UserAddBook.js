@@ -481,7 +481,7 @@ function UserAddBook() {
                                                     setErrors({ ...errors, image: "" });
                                                     }
 
-                                                    handleFileChange(e); // Your existing logic
+                                                    handleFileChange(e); 
                                                 }
                                                 }}
                                                 />
