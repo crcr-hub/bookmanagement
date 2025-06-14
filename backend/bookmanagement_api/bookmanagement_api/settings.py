@@ -28,7 +28,14 @@ SECRET_KEY = 'django-insecure-*p7o0)v&_pu+)xv1gex#3yvnwqu7&%jx!t1-1g^sj42(u87ie+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = [
+    "13.60.19.84",
+    "bookapp.solutions",
+    "www.bookapp.solutions",
+     "127.0.0.1",
+    "localhost",
+
+]
 
 # Application definition
 
