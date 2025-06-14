@@ -17,7 +17,7 @@ import UserReadlist from '../components/userpages/UserReadlist';
 function Layout() {
   return (
    <Routes>
-    <Route path='' element={<Home/>} />
+    <Route path="/" element={<Home/>} />
     <Route path="/loginpage" element={<Login/> } />
     <Route path='/register' element={<Register/>} />
     <Route path='/userhome' element={<PrivateRoute><UserHome/></PrivateRoute>}/>
