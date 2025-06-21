@@ -5,6 +5,7 @@ import UserFooter from './UserFooter'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { bookDetail, subscribeBook } from '../../redux/authSlices'
+import Swal from 'sweetalert2';
 
 function UserBookDetails() {
     const {bid} = useParams()
@@ -21,7 +22,22 @@ function UserBookDetails() {
 
     const subscribeButton = async()=>{
         if (singlebook.book){
-            await dispatch(subscribeBook(singlebook.book.id));
+           const result =  await dispatch(subscribeBook(singlebook.book.id));
+             if (result.payload && !result.payload.error) {
+                    Swal.fire({
+                    icon: 'success',
+                    title: 'SubScribed',
+                    text: 'Subscribed Success',
+                    timer: 1500,
+                    showConfirmButton: false,
+                    });
+                } else {
+                     Swal.fire({
+                     icon: 'info',
+                     title: 'Already Exists',
+                     text: result.payload?.message || 'Something went wrongS',
+                     });
+                }
             await  dispatch(bookDetail(bid));
         }
        

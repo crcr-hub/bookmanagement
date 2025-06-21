@@ -6,6 +6,7 @@ import Cropper from 'react-easy-crop';
 import {  useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { addBook } from '../../redux/authSlices';
+import Swal from 'sweetalert2';
 
 function UserAddBook() {
 
@@ -192,7 +193,14 @@ function UserAddBook() {
                                   }
                                   setErrors(newErrors)
                               } else{
-                                navigate('/userhome')}
+                                 Swal.fire({
+                                           icon: 'success',
+                                          title: 'Added!',
+                                          text: 'Your Book Added successfully.',
+                                          timer: 1500,
+                                          showConfirmButton: false,
+                                          });
+                                navigate('/mybooks')}
         }
         
       }

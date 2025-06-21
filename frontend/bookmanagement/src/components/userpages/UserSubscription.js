@@ -5,6 +5,8 @@ import UserFooter from './UserFooter'
 import { useDispatch, useSelector } from 'react-redux'
 import { addReadlistTitle, addToReadlist, getReadlistTitle, subscriptionList } from '../../redux/authSlices'
 import { useNavigate } from 'react-router-dom'
+import Swal from 'sweetalert2';
+
 
 function UserSubscription() {
     const {subscriptionBooks} = useSelector((state)=>state.auth)
@@ -213,7 +215,22 @@ function UserSubscription() {
                                     className="btn btn-sm btn-success"
                                     onClick={async() => {
                                     const newItem = { bid: selectedBookId, titleId: list.id };
-                                     await dispatch(addToReadlist(newItem));
+                                    const result = await dispatch(addToReadlist(newItem));
+                                     if (result.payload && !result.payload.error) {
+                                        Swal.fire({
+                                          icon: 'success',
+                                          title: 'Added!',
+                                          text: 'Book added to your readlist successfully.',
+                                          timer: 1500,
+                                          showConfirmButton: false,
+                                        });
+                                      } else {
+                                        Swal.fire({
+                                          icon: 'info',
+                                          title: 'Already Exists',
+                                          text: result.payload?.message || 'Book is already in your readlist.',
+                                        });
+                                      }
                                      await dispatch(subscriptionList())
                                     setShowAddModal(false);
                                     }}

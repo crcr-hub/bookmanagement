@@ -5,7 +5,8 @@ import bgimage1 from '../../assets/images/bgimage1.jpg'
 import Cropper from 'react-easy-crop';
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
-import { addBook, deleteBook, updateBook, updateBookDetails, userDetails } from '../../redux/authSlices';
+import { deleteBook, updateBook, updateBookDetails } from '../../redux/authSlices';
+import Swal from 'sweetalert2';
 
 function UserUpdateBook() {
     const [isEditing, setIsEditing] = useState(false);
@@ -233,6 +234,13 @@ function UserUpdateBook() {
   
         setErrors(newErrors);
       } else {
+        Swal.fire({
+          icon: 'success',
+          title: 'Updated',
+          text: 'Book Updated successfully.',
+         timer: 1500,
+          showConfirmButton: false,
+           });
        setIsEditing(false)
       }
     }
@@ -253,7 +261,23 @@ function UserUpdateBook() {
         if (confirmed) {
           try {
             // dispatch soft delete or actual delete action here
-            await dispatch(deleteBook(bid)); // or book.id
+            const result = await dispatch(deleteBook(bid)); // or book.id
+
+             if (result.payload && !result.payload.error) {
+                 Swal.fire({
+                 icon: 'success',
+                 title: 'Deleted',
+                 text: 'Book Removed successfully.',
+                timer: 1500,
+                 showConfirmButton: false,
+                  });
+                } else {
+                  Swal.fire({
+                    icon: 'info',
+                    title: 'Already Exists',
+                    text: result.payload?.message || 'Book is already in your readlist.',
+                     });
+                 }
             navigate('/mybooks'); // or wherever you want to redirect
           } catch (error) {
             console.error("Failed to delete book:", error);

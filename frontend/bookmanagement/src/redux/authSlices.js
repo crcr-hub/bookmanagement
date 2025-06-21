@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axiosInstance from './utils/axiosInstance';
-import { act } from 'react';
+
 
 export const loginUser = createAsyncThunk('auth/loginUser', async ({username,password,navigate}, { rejectWithValue }) => {
   try {
@@ -26,6 +26,15 @@ export const registerUser = createAsyncThunk('auth/register',
         }
     }
 )
+//-------------------Changepassword------------------------
+export const changePassword = createAsyncThunk('user/changePassword',async (data,{rejectWithValue}) =>{
+  try{
+      const response = await axiosInstance.post('/changepassword/',data)
+      return response.data
+  }catch(error){
+      return rejectWithValue(error.response?.data || 'Failed to fetch details');
+  }
+})
 
 // User details-------------------------
 
@@ -245,6 +254,18 @@ export const deleteReadList = createAsyncThunk('book/deleteReadList',
   async(tid,{rejectWithValue})=>{
       try{
           const response = await axiosInstance.delete(`/singleReadlist/${tid}`);
+          return response.data
+      }catch(error){
+          return rejectWithValue(error.response?.data || "Failed to fetch readlist")
+      }
+  }
+)
+
+//------------update reading list name
+export const updateReadList = createAsyncThunk('book/updateReadList',
+  async(newItem,{rejectWithValue})=>{
+      try{
+          const response = await axiosInstance.patch(`/singleReadlist/${newItem.titleId}`,newItem);
           return response.data
       }catch(error){
           return rejectWithValue(error.response?.data || "Failed to fetch readlist")

@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import UserNavbar from './UserNavbar'
 import { useDispatch, useSelector } from 'react-redux'
-import {  updateUserProfile, userProfile } from '../../redux/authSlices'
+import {  changePassword, logoutUser, updateUserProfile, userProfile } from '../../redux/authSlices'
 import bgimage1 from '../../assets/images/bgimage1.jpg'
 import UserFooter from './UserFooter'
+import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom'
 
 export default function UserProfile() {
 
     const {user_profile} = useSelector((state)=>state.auth)
     const [isEditing, setIsEditing] = useState(false)
     const [isPwdEditing, setIsPwdEditing] = useState(false)
+    const navigate = useNavigate()
 
     const [profileData, setProfileData] = useState({
       
@@ -106,10 +109,20 @@ export default function UserProfile() {
 
                 if (updateUserProfile.fulfilled.match(result)) {
                     await dispatch(userProfile())
+                     Swal.fire({
+                                      icon: 'success',
+                                      title: 'Updated',
+                                      text: 'Profile Updated',
+                                      toast: true,
+                                      timer: 4000,
+                                      position: 'top-right',
+                                      timerProgressBar: true,
+                                      showConfirmButton: false,
+                                    });
                     setOriginalProfileData(profileData)
                     setIsEditing(false)
                 } else {
-                    console.error("Update failed:", result)
+                
                     const payload = result.payload;
                     // Display backend error (could also check for specific fields like username or email)
                     let newErrors = {};
@@ -158,39 +171,47 @@ export default function UserProfile() {
             return;
         }
     
-        // try {
-        //     const result = await dispatch(changePassword(passwordData));
+        try {
+            const result = await dispatch(changePassword(passwordData));
     
-        //     if (changePassword.fulfilled.match(result)) {
-        //         setIsPwdEditing(false);
-        //         setPasswordData({ current_password: "", new_password: "", confirm_password: "" });
-        //         setErrors({});
+            if (changePassword.fulfilled.match(result)) {
+                setIsPwdEditing(false);
+                setPasswordData({ current_password: "", new_password: "", confirm_password: "" });
+                setErrors({});
     
-        //         Swal.fire({
-        //             icon: 'success',
-        //             title: 'Success!',
-        //             text: 'Password changed successfully',
-        //             toast: true,
-        //             position: 'top-end',
-        //             timer: 3000,
-        //             showConfirmButton: false,
-        //         });
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: 'Password changed successfully',
+                    toast: true,
+                    position: 'top-end',
+                    timer: 3000,
+                    showConfirmButton: false,
+                });
     
-        //         dispatch(logoutUser()); // Logout only after success
-        //     } else {
-        //         throw new Error(result.payload?.error || 'Failed to change password');
-        //     }
-        // } catch (err) {
-        //     Swal.fire({
-        //         icon: 'error',
-        //         title: 'Error',
-        //         text: err.message || 'Something went wrong',
-        //         toast: true,
-        //         position: 'top-end',
-        //         timer: 4000,
-        //         showConfirmButton: false,
-        //    });
-        //}
+                dispatch(logoutUser(navigate)); // Logout only after success
+            } else {
+                let message = 'Failed to change password';
+                    const payload = result.payload;
+
+                    if (typeof payload === 'string') {
+                    message = payload;
+                    } else if (typeof payload === 'object' && payload !== null) {
+                    const firstErrorArray = Object.values(payload)[0];
+                    if (Array.isArray(firstErrorArray) && firstErrorArray.length > 0) {
+                        message = firstErrorArray[0];
+                    } else {
+                        message = firstErrorArray;
+                    }
+                    }
+
+                    setErrors({ ...errors, password: message });
+            }
+        } catch (err) {
+            console.error('Unexpected error:', err);
+            setErrors({ ...errors, password: 'Unexpected error occurred' });
+           
+        }
     };
     
   return (

@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import {  Link, useNavigate } from 'react-router-dom';
 import image2 from '../../assets/images/image2.jpg'
 import { registerUser } from '../../redux/authSlices';
+import Swal from 'sweetalert2';
 
 function Register() {
     const dispatch = useDispatch()
@@ -99,6 +100,16 @@ function Register() {
                   }
                   setErrors(newErrors)
               } else {
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Registered',
+                  text: 'You are successfully Registred with Us',
+                  toast: true,
+                  timer: 4000,
+                  position: 'top-right',
+                  timerProgressBar: true,
+                  showConfirmButton: false,
+                });
                 navigate('/loginpage')
               }
             

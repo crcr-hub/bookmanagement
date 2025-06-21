@@ -3,7 +3,7 @@ import UserFooter from './UserFooter'
 import UserNavbar from './UserNavbar'
 import { useDispatch, useSelector } from 'react-redux';
 import bgimage1 from '../../assets/images/bgimage1.jpg'
-import { addReadlistTitle, deleteReadList, getReadList, getReadlistTitle, getSingleReadList, moveDown, moveUp, removeReadlist } from '../../redux/authSlices';
+import { addReadlistTitle, deleteReadList, getReadList, getReadlistTitle, getSingleReadList, moveDown, moveUp, removeReadlist, updateReadList } from '../../redux/authSlices';
 import { Link, useNavigate } from 'react-router-dom';
 
 function UserReadlist() {
@@ -14,7 +14,10 @@ function UserReadlist() {
     const [showModalName, setShowModalName] = useState(false);
     const [newTitle, setNewTitle] = useState('');
     const [openDropdownId, setOpenDropdownId] = useState(null);
-  console.log("readlinst",readList)
+    const [titleId,setTitleId] = useState(null);
+    const [renameError, setRenameError] = useState('');
+
+  console.log("readlinst",readList,newTitle)
 
     const navigate = useNavigate()
     const dispatch = useDispatch()
@@ -143,7 +146,8 @@ function UserReadlist() {
                                       <li>
                                         <button className="dropdown-item" onClick={(e) => {
                                           e.stopPropagation();
-                                          console.log("Change name:", list.id);
+                                          setShowModalName(true)
+                                          setTitleId(list.id)
                                           setOpenDropdownId(null);
                                           // handleRename(list.id)
                                         }}>
@@ -243,7 +247,7 @@ function UserReadlist() {
       ))
   ) : (
     <div className="col-md-12 mb-3" style={{width:"800px"}}>
-      <p className="text-muted">Empty Readinglist.</p>
+      <p className="text-muted">No Books Found.</p>
     </div>
     
   )}
@@ -296,7 +300,70 @@ function UserReadlist() {
   </div>
 )}
 
+{showModalName && (
+  <div className="modal show d-block" tabIndex="-1">
+    <div className="modal-dialog">
+      <div className="modal-content">
+        <div className="modal-header">
+          <h5 className="modal-title">Change Readinglist Name</h5>
+          <button type="button" className="btn-close" onClick={() => setShowModalName(false)}></button>
+        </div>
+        <div className="modal-body">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Enter new list title"
+            value={newTitle}
+            onChange={(e) => {setNewTitle(e.target.value)
+              if (renameError){
+                setRenameError("")
+              }
+            }}
+          />
+        </div>
+        <div className="modal-footer">
+          <button className="btn btn-secondary" onClick={() => {setShowModalName(false)
+            setNewTitle('');
+            if (renameError){
+              setRenameError("")
+            }
+          }}>Cancel</button>
+          <button
+                className="btn btn-primary"
+                onClick={async () => {
+                  const newItem = { title: newTitle, titleId: titleId };
+                  setRenameError(''); // Reset previous error
+                  try {
+                    const result = await dispatch(updateReadList(newItem));
+                    console.log("payload",result.payload)
+                    if (result.payload?.error) {
+                      setRenameError(result.payload.error);
+                    } else if (result.payload?.id) {
+                      await dispatch(getReadlistTitle());
+                      await dispatch(getSingleReadList(result.payload.id));
+                      setActiveTitleId(result.payload.id);
+                      setNewTitle('');
+                      setShowModalName(false);
+                    }
+                  } catch (error) {
+                    setRenameError('Something went wrong.');
+                    console.error('Failed to update title:', error);
+                  }
+                }}
+              >
+                Update
+              </button>
+              {renameError && (
+                <div className="text-danger mt-2">
+                  {renameError}
+                </div>
+              )}
 
+        </div>
+      </div>
+    </div>
+  </div>
+)}
 
 
 
