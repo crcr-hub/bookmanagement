@@ -62,14 +62,21 @@ class Subscription(models.Model):
     updated = models.DateTimeField(auto_now=True)
     unsubscribe = models.BooleanField(default=False)
 
+class ReadlistTitle(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    title = models.CharField(max_length=1000,null=True,blank=True)
+
 class ReadList(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
+    title = models.ForeignKey(ReadlistTitle,on_delete=models.CASCADE,null=True,blank=True)
     book = models.ForeignKey(Books,on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
     number = models.BigIntegerField(default=0)
     def save(self, *args, **kwargs):
         if self._state.adding and self.number == 0:
             # Count how many ReadList entries this user already has
-            last_number = ReadList.objects.filter(user=self.user).count()
+            last_number = ReadList.objects.filter(user=self.user,title = self.title).count()
             self.number = last_number + 1  # start from 1
         super().save(*args, **kwargs)
+
+

@@ -7,8 +7,8 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,)
 
 from .views import (CustomTokenObtainPairView,Registeriew,UserDetails,LogoutView,
-                    UserProfile,BookView,GetBooks,UpdateBook,BookDetails,SubcriptionList,
-                    ReadListBook,GetReadlist,MoveReadListDown,MoveReadListUp,GetIndexBooks)
+                    UserProfile,BookView,GetBooks,UpdateBook,BookDetails,SubcriptionList,getSingleReadList,ChangePasswordView,
+                    ReadListBook,GetReadlist,MoveReadListDown,MoveReadListUp,GetIndexBooks,handleReadlistTitle)
 from rest_framework_simplejwt.views import (
     TokenRefreshView
 
@@ -33,5 +33,9 @@ urlpatterns = [
     path('read/',GetReadlist.as_view(),name='read'),
     path('readlist/<int:bid>/moveup/', MoveReadListUp.as_view(), name='move-readlist-up'),
     path('readlist/<int:bid>/movedown/', MoveReadListDown.as_view(), name='move-readlist-down'),
+    path('handlereadlistTitle/',handleReadlistTitle.as_view(),name='handle-readlist-title'),
+    path('singleReadlist/<int:tid>',getSingleReadList.as_view(),name='single-readlist'),
+    path('changepassword/',ChangePasswordView.as_view(),name='changepassword'),
+
 
 ]

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from rest_framework.exceptions import AuthenticationFailed
-from books.models import (User,Profile,Books,Subscription,ReadList)
+from books.models import (User,Profile,Books,Subscription,ReadList,ReadlistTitle)
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from books.models import Profile, User
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -102,6 +102,33 @@ class RegisterSerializer(serializers.ModelSerializer):
         )
         profile.save()
         return user
+    
+
+
+from django.contrib.auth.password_validation import validate_password
+from django.contrib.auth.hashers import check_password
+
+class ChangePasswordSerializer(serializers.Serializer):
+    current_password = serializers.CharField(write_only=True, required=True)
+    new_password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
+    confirm_password = serializers.CharField(write_only=True, required=True)
+
+    def validate(self, attrs):
+        user = self.context['request'].user
+        current_password = attrs.get('current_password')
+        new_password = attrs.get('new_password')
+        confirm_password = attrs.get('confirm_password')
+
+        if not check_password(current_password, user.password):
+            raise serializers.ValidationError({"current_password": "Current password is incorrect."})
+
+        if new_password != confirm_password:
+            raise serializers.ValidationError({"confirm_password": "New passwords do not match."})
+
+        if len(set(new_password.strip())) == 1:
+            raise serializers.ValidationError({"new_password": "Password can't be all the same character."})
+
+        return attrs
         
 class ProfileSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(queryset = User.objects.all())
@@ -200,7 +227,7 @@ class ReadListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ReadList
-        fields = ['user', 'book', 'date','number']
+        fields = ['user', 'book', 'date','number','title']
         read_only_fields = ['date', ]
 
 class BookWithReadListSerializer(serializers.ModelSerializer):
@@ -215,4 +242,17 @@ class BookWithReadListSerializer(serializers.ModelSerializer):
         if not user or user.is_anonymous:
             return False
         return ReadList.objects.filter(user=user, book=obj).exists()
+    
+class ReadListTitleSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    class Meta:
+        model = ReadlistTitle
+        fields = ['id','user','title']
+    
+    def get_isinreadlistTitle(self, obj):
+        user = self.context.get('user')
+        if not user or user.is_anonymous:
+            return False
+        return ReadlistTitle.objects.filter(user=user).exists()
+
 
