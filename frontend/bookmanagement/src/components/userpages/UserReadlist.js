@@ -1,42 +1,63 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import UserFooter from './UserFooter'
 import UserNavbar from './UserNavbar'
 import { useDispatch, useSelector } from 'react-redux';
 import bgimage1 from '../../assets/images/bgimage1.jpg'
-import { getReadList, moveDown, moveUp, removeReadlist } from '../../redux/authSlices';
-import { useNavigate } from 'react-router-dom';
+import { addReadlistTitle, deleteReadList, getReadList, getReadlistTitle, getSingleReadList, moveDown, moveUp, removeReadlist } from '../../redux/authSlices';
+import { Link, useNavigate } from 'react-router-dom';
 
 function UserReadlist() {
     const {readList} = useSelector((state)=>state.auth)
+    const {readlistTitle} = useSelector((state)=>state.auth)
+    const [activeTitleId, setActiveTitleId] = useState(null);
+    const [showModal, setShowModal] = useState(false);
+    const [showModalName, setShowModalName] = useState(false);
+    const [newTitle, setNewTitle] = useState('');
+    const [openDropdownId, setOpenDropdownId] = useState(null);
+  console.log("readlinst",readList)
+
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    console.log(readList)
     useEffect(()=>{
         dispatch(getReadList())
+        dispatch(getReadlistTitle())
     },[dispatch])
+    
+    const handleClick =(tid) =>{
+      setActiveTitleId(tid);
+      dispatch(getSingleReadList(tid))
+    }
 
-    const handleMoveUp = async (bookId) => {
+    useEffect(() => {
+      if (readlistTitle?.length > 0 && !activeTitleId) {
+        setActiveTitleId(readlistTitle[0].id);
+      }
+    }, [readlistTitle]);
+
+    const handleMoveUp = async (bookId,titleId) => {
         try {
-          await dispatch(moveUp(bookId));      // Dispatch the async thunk
-          await dispatch(getReadList());       // Refresh the list to get updated order
+          const newItem = {bid : bookId,titleId:titleId}
+          await dispatch(moveUp(newItem));      // Dispatch the async thunk
+          await dispatch(getSingleReadList (titleId));     // Refresh the list to get updated order
         } catch (error) {
           console.error('Move up failed:', error);
         }
       };
       
-      const handleMoveDown = async(bookId) => {
+      const handleMoveDown = async(bookId,titleId) => {
         try {
-            await dispatch(moveDown(bookId));      // Dispatch the async thunk
-            await dispatch(getReadList());       // Refresh the list to get updated order
+          const newItem = {bid : bookId,titleId:titleId}
+            await dispatch(moveDown(newItem));      // Dispatch the async thunk
+            await dispatch(getSingleReadList (titleId));       // Refresh the list to get updated order
           } catch (error) {
             console.error('Move up failed:', error);
           }
       };
       
-      const handleRemove = async(bookId) => {
+      const handleRemove = async(bookId,titleId) => {
         try {
             await dispatch(removeReadlist(bookId));      
-            await dispatch(getReadList());       
+            await dispatch(getSingleReadList (titleId));      
           } catch (error) {
             console.error('Move up failed:', error);
           }
@@ -82,9 +103,86 @@ function UserReadlist() {
 <div className="profile-header mb-4">
   <h2 className="text-primary">Your List</h2>
 </div>
+<div style={{display:"flex"}}>
+<aside className='col-md-2'>
+                <div className='card'>
+                    <h5 className='card-header'>Saved List</h5>
+                    <div className='list-group list-group-flush'>
+                    {readlistTitle && readlistTitle.length > 0 ?(
 
+                            readlistTitle.map((list, index) => (
+                              <div
+                                key={list.id}
+                                className={`list-group-item list-group-item-action d-flex justify-content-between align-items-center ${activeTitleId === list.id ? 'active' : ''}`}
+                                onClick={() => handleClick(list.id)}
+                              >
+                                <span style={{ cursor: "pointer" }}>{list.title}</span>
+
+                                <div className="position-relative">
+                                  <button
+                                    className="btn btn-sm btn-light"
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.stopPropagation();  // prevent triggering list click
+                                      setOpenDropdownId(openDropdownId === list.id ? null : list.id);  // toggle
+                                    }}
+                                  >
+                                    ⋮
+                                  </button>
+
+                                  {openDropdownId === list.id && (
+                                    <ul
+                                      className="dropdown-menu show"
+                                      style={{
+                                        position: 'absolute',
+                                        top: 0,
+                                        left: 30,
+                                        zIndex: 999
+                                      }}
+                                    >
+                                      <li>
+                                        <button className="dropdown-item" onClick={(e) => {
+                                          e.stopPropagation();
+                                          console.log("Change name:", list.id);
+                                          setOpenDropdownId(null);
+                                          // handleRename(list.id)
+                                        }}>
+                                          ✏️ Change Name
+                                        </button>
+                                      </li>
+                                      <li>
+                                        <button className="dropdown-item text-danger" onClick={async(e) => {
+                                          e.stopPropagation();
+                                          await dispatch(deleteReadList(list.id));
+                                          await dispatch(getReadList())
+                                          await dispatch(getReadlistTitle())
+                
+                                          setOpenDropdownId(null);
+                                          // handleDelete(list.id)
+                                        }}>
+                                          🗑 Delete
+                                        </button>
+                                      </li>
+                                    </ul>
+                                  )}
+                                </div>
+                              </div>
+                              ))
+                    ):("")   
+                            }
+
+                      <Link
+                        className='list-group-item list-group-item-action d-flex justify-content-between align-items-center'
+                        onClick={() => setShowModal(true)}
+                      >
+                        NewList <span className="fw-bold">+</span>
+                      </Link>
+                    </div>
+                   
+                </div>
+            </aside>
 <div className="card p-4">
-  <div className="row" style={{ color: 'black' }}>
+  <div className="row" style={{ color: 'black',width:"990px" }}>
   {readList && readList.length > 0 ? (
     [...readList]
       .sort((a, b) => a.number - b.number)
@@ -99,7 +197,7 @@ function UserReadlist() {
               <img  onClick={()=> handlieClick(item.book.id)}
                 src={
                   item.book.images
-                    ? `https://bookapp.solutions${item.book.images}`
+                    ? `http://127.0.0.1:8000${item.book.images}`
                     : '/default-book.jpg'
                 }
                 alt={item.book.title}
@@ -112,30 +210,30 @@ function UserReadlist() {
                   cursor:"pointer"
                 }}
               />
-              <div>
+              <div style={{width:"90%"}}>
                 <h5 className="mb-1">{item.book.title}</h5>
                 <p className="mb-0">Author: {item.book.author}</p>
                 
               </div>
             </div>
-            <div className="d-flex flex-column align-items-end gap-2">
+            <div className="d-flex flex-column align-items-end gap-2" style={{width:"25%"}}>
               <button
                 className="btn btn-sm btn-primary"
                 disabled={index === 0}
-                onClick={() => handleMoveUp(item.book.id)}
+                onClick={() => handleMoveUp(item.book.id,item.title)}
               >
                 ↑ Move Up
               </button>
               <button
                 className="btn btn-sm btn-secondary"
                 disabled={index === readList.length - 1}
-                onClick={() => handleMoveDown(item.book.id)}
+                onClick={() => handleMoveDown(item.book.id,item.title)}
               >
                 ↓ Move Down
               </button>
               <button
                 className="btn btn-sm btn-danger"
-                onClick={() => handleRemove(item.book.id)}
+                onClick={() => handleRemove(item.book.id,item.title )}
               >
                 🗑 Remove
               </button>
@@ -144,10 +242,64 @@ function UserReadlist() {
         </div>
       ))
   ) : (
-    <p className="text-muted">You haven't added any books to your Readlist yet.</p>
+    <div className="col-md-12 mb-3" style={{width:"800px"}}>
+      <p className="text-muted">Empty Readinglist.</p>
+    </div>
+    
   )}
   </div>
 </div>
+</div>
+{showModal && (
+  <div className="modal show d-block" tabIndex="-1">
+    <div className="modal-dialog">
+      <div className="modal-content">
+        <div className="modal-header">
+          <h5 className="modal-title">Add New Readinglist</h5>
+          <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
+        </div>
+        <div className="modal-body">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Enter new list title"
+            value={newTitle}
+            onChange={(e) => setNewTitle(e.target.value)}
+          />
+        </div>
+        <div className="modal-footer">
+          <button className="btn btn-secondary" onClick={() => setShowModal(false)}>Cancel</button>
+          <button
+                className="btn btn-primary"
+                onClick={async () => {
+                  const newItem = { title: newTitle };
+                  try {
+                    const result = await dispatch(addReadlistTitle(newItem));
+                    if (result.payload && result.payload.id) {
+                      await dispatch(getReadlistTitle());
+                      await dispatch(getSingleReadList(result.payload.id))
+                      setActiveTitleId(result.payload.id);
+                    }     
+                    setNewTitle('');
+                    setShowModal(false);
+                  } catch (error) {
+                    console.error('Failed to add title:', error);
+                  }
+                }}
+              >
+                Add
+              </button>
+
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+
+
+
+
+
         </div>
       <UserFooter/>
     </div>

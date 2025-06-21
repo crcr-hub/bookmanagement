@@ -1,25 +1,34 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import bgimage1 from '../../assets/images/bgimage1.jpg'
 import UserNavbar from './UserNavbar'
 import UserFooter from './UserFooter'
 import { useDispatch, useSelector } from 'react-redux'
-import { addToReadlist, subscriptionList } from '../../redux/authSlices'
+import { addReadlistTitle, addToReadlist, getReadlistTitle, subscriptionList } from '../../redux/authSlices'
 import { useNavigate } from 'react-router-dom'
 
 function UserSubscription() {
     const {subscriptionBooks} = useSelector((state)=>state.auth)
+    const {readlistTitle} = useSelector((state)=>state.auth)
+    const [showAddModal, setShowAddModal] = useState(false);
+    const [selectedBookId, setSelectedBookId] = useState(null);
+    const [newListTitle, setNewListTitle] = useState('');
+    const [isCreating, setIsCreating] = useState(false);
+
     const dispatch = useDispatch()
     const navigate = useNavigate()
     console.log(subscriptionBooks)
     useEffect(()=>{
         dispatch(subscriptionList())
+         dispatch(getReadlistTitle())
     },[dispatch])
 
     const handleGoButton = ()=>{
         navigate("/readlist")
     }
     const handleAddButton =async(bid)=>{
-        await dispatch(addToReadlist(bid));
+        setSelectedBookId(bid);
+        setShowAddModal(true);
+        // await dispatch(addToReadlist(bid));
         await dispatch(subscriptionList())
     }
     const handlieClick =(bid)=>{
@@ -128,9 +137,98 @@ function UserSubscription() {
                         </div>
                         </div>
                     ))
-                ):(<p> You are not Registered any Books</p>) }
+                ):(<p> You are not Subscribed any Books</p>) }
                         </div>
             </div>
+
+
+
+
+            {showAddModal && (
+                    <div className="modal-backdrop" style={{
+                        position: 'fixed', top: 0, left: 0, width: '100%', height: '100%',
+                        backgroundColor: 'rgba(0, 0, 0, 0.5)', zIndex: 1050
+                    }}>
+                        <div className="modal-content" style={{
+                        width: '400px',
+                        backgroundColor: '#fff',
+                        padding: '20px',
+                        borderRadius: '10px',
+                        margin: '100px auto',
+                        position: 'relative'
+                        }}>
+                        {/* Close Button */}
+                        <button
+                            style={{
+                            position: 'absolute',
+                            top: '10px',
+                            right: '10px',
+                            background: 'transparent',
+                            border: 'none',
+                            fontSize: '20px',
+                            cursor: 'pointer'
+                            }}
+                            onClick={() => {
+                            setShowAddModal(false);
+                            setNewListTitle('');
+                            }}
+                        >❌</button>
+
+                        <h5>Select a Reading List</h5>
+
+                        {/* Show Input Box if no titles */}
+                        {readlistTitle.length === 0 && (
+                            <div className="d-flex mt-3">
+                            <input
+                                className="form-control"
+                                type="text"
+                                value={newListTitle}
+                                onChange={(e) => setNewListTitle(e.target.value)}
+                                placeholder="New list title"
+                            />
+                            <button
+                                className="btn btn-success ms-2"
+                                onClick={async () => {
+                                if (!newListTitle.trim()) return;
+                                setIsCreating(true);
+                                const result = await dispatch(addReadlistTitle({ title: newListTitle }));
+                                if (result.payload?.id) {
+                                     await dispatch(getReadlistTitle());
+                                     setNewListTitle('');
+                                 }
+                                setIsCreating(false);
+                                }}
+                                disabled={isCreating}
+                            >+</button>
+                            </div>
+                        )}
+
+                        {/* Render the readlist */}
+                        <ul className="list-group mt-3">
+                            {readlistTitle && readlistTitle.length > 0 ? (
+                            readlistTitle.map((list) => (
+                                <li key={list.id} className="list-group-item d-flex justify-content-between align-items-center">
+                                {list.title}
+                                <button
+                                    className="btn btn-sm btn-success"
+                                    onClick={async() => {
+                                    const newItem = { bid: selectedBookId, titleId: list.id };
+                                     await dispatch(addToReadlist(newItem));
+                                     await dispatch(subscriptionList())
+                                    setShowAddModal(false);
+                                    }}
+                                >
+                                    +
+                                </button>
+                                </li>
+                            ))
+                            ) : null}
+                        </ul>
+                        </div>
+                    </div>
+                    )}
+
+
         </div>
       <UserFooter/>
     </div>

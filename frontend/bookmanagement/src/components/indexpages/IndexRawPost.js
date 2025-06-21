@@ -38,7 +38,7 @@ function IndexRawPost({ genre, title }) {
               key={book.id}
               className="poster"
               alt={book.title}
-              src={book.images} // Adjust domain as needed
+              src={book.images} 
               title={book.title} style={{height:"300px"}}
               onClick={()=> handlieClick(book.id)}
             />

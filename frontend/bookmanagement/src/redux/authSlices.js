@@ -203,6 +203,56 @@ export const subscriptionList = createAsyncThunk('book/subscriptionList',
 )
 
 //------------------ Get add and update  readlist -  ---------------------------
+
+export const getReadlistTitle = createAsyncThunk('book/getReadlistTitle',
+  async(_,{rejectWithValue})=>{
+    try{
+      const response = await axiosInstance.get('/handlereadlistTitle/');
+      return response.data
+    }catch(error){
+      return rejectWithValue(error.response?.data || "failed to get ReadlistTitle");
+    }
+  }
+)
+
+
+export const addReadlistTitle = createAsyncThunk('book/addReadlistTitle',
+  async(newItem,{rejectWithValue})=>{
+    try{
+      const response = await axiosInstance.post('/handlereadlistTitle/',newItem);
+      return response.data
+    }catch(error){
+      return rejectWithValue(error.response?.data || "failed to add ReadlistTitle");
+    }
+  }
+)
+//getSingleReadList
+
+export const getSingleReadList = createAsyncThunk('book/getSingleReadList',
+  async(tid,{rejectWithValue})=>{
+      try{
+          const response = await axiosInstance.get(`/singleReadlist/${tid}`);
+          return response.data
+      }catch(error){
+          return rejectWithValue(error.response?.data || "Failed to fetch readlist")
+      }
+  }
+)
+
+//------------delete entire reading list
+
+export const deleteReadList = createAsyncThunk('book/deleteReadList',
+  async(tid,{rejectWithValue})=>{
+      try{
+          const response = await axiosInstance.delete(`/singleReadlist/${tid}`);
+          return response.data
+      }catch(error){
+          return rejectWithValue(error.response?.data || "Failed to fetch readlist")
+      }
+  }
+)
+
+
 export const getReadList = createAsyncThunk('book/getReadList',
     async(_,{rejectWithValue})=>{
         try{
@@ -215,9 +265,9 @@ export const getReadList = createAsyncThunk('book/getReadList',
 )
 
 export const addToReadlist = createAsyncThunk('book/addToReadlist',
-    async(bid,{rejectWithValue})=>{
+    async(newItem,{rejectWithValue})=>{
         try{
-            const response = await axiosInstance.post(`/readlist/${bid}`);
+            const response = await axiosInstance.post(`/readlist/${newItem.bid}`,newItem);
             return response.data
         }catch(error){
             return rejectWithValue(error.response?.data || "Failed to add books")
@@ -237,9 +287,9 @@ export const removeReadlist = createAsyncThunk('book/addToReadlist',
 )
 
 export const moveUp = createAsyncThunk('book/moveUp',
-    async(bid,{rejectWithValue})=>{
+    async(newItem,{rejectWithValue})=>{
         try{
-            const response = await axiosInstance.post(`/readlist/${bid}/moveup/`);
+            const response = await axiosInstance.post(`/readlist/${newItem.bid}/moveup/`,newItem);
             return response.data
         }catch(error){
             return rejectWithValue(error.response?.data || "Failed to  update")
@@ -247,9 +297,9 @@ export const moveUp = createAsyncThunk('book/moveUp',
     }
 )
 export const moveDown = createAsyncThunk('book/moveDown',
-    async(bid,{rejectWithValue})=>{
+    async(newItem,{rejectWithValue})=>{
         try{
-            const response = await axiosInstance.post(`/readlist/${bid}/movedown/`);
+            const response = await axiosInstance.post(`/readlist/${newItem.bid}/movedown/`,newItem);
             return response.data
         }catch(error){
             return rejectWithValue(error.response?.data || "Failed to  update")
@@ -290,6 +340,7 @@ const authSlice = createSlice({
     singlebook : [],
     subscriptionBooks : [],
     readList : [],
+    readlistTitle : null,
   },
   reducers: {
     logout: (state) => {
@@ -304,6 +355,43 @@ const authSlice = createSlice({
   extraReducers: (builder) => {
     builder
      
+
+      .addCase(getReadlistTitle.pending,(state)=>{
+        state.pending = true;
+        state.error = null;
+      }) 
+      .addCase(getReadlistTitle.rejected,(state,action)=>{
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(getReadlistTitle.fulfilled,(state,action)=>{
+        state.loading = false;
+        state.error = null;
+        state.readlistTitle = action.payload;
+      })
+
+      //getSingleReadList
+      
+
+
+      .addCase(getSingleReadList.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getSingleReadList.fulfilled, (state, action) => {
+        state.loading = false;
+        state.readList = action.payload;
+      })
+      .addCase(getSingleReadList.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.readList = null;
+      })
+
+
+
+
+
       .addCase(getReadList.pending,(state)=>{
         state.loading = true;
         state.error = null
