@@ -26,10 +26,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-*p7o0)v&_pu+)xv1gex#3yvnwqu7&%jx!t1-1g^sj42(u87ie+'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
-    "51.21.245.146",
+    "13.60.28.164",
     "bookapp.solutions",
     "www.bookapp.solutions",
     "127.0.0.1",
