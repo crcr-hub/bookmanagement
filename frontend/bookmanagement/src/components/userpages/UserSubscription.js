@@ -159,7 +159,7 @@ function UserSubscription() {
                         margin: '100px auto',
                         position: 'relative'
                         }}>
-                        {/* Close Button */}
+                      
                         <button
                             style={{
                             position: 'absolute',

@@ -312,7 +312,7 @@ function UserUpdateBook() {
         height: 'calc(100vh - 50px)',
         overflowY: 'auto',
         backdropFilter: 'blur(4px)',
-        backgroundColor: 'rgba(255, 255, 255, 0.2)', // optional for modern effect
+        backgroundColor: 'rgba(255, 255, 255, 0.2)', 
         padding: '2rem',
         
       }}
@@ -492,7 +492,7 @@ function UserUpdateBook() {
                                     </div>
                                 ):(
                                     <div style={{ marginBottom: '20px',position: 'relative' }}>
-                                    <img src={bookeData && bookeData.images ? `http://127.0.0.1:8000${bookeData.images}` : '/default-book.jpg'} alt="Preview" 
+                                    <img src={bookeData && bookeData.images ? `https://bookapp.solutions${bookeData.images}` : '/default-book.jpg'} alt="Preview" 
                                        style={{height:"450px", 
                                         width: '390px',
                                          borderRadius: '10px',
@@ -571,7 +571,7 @@ function UserUpdateBook() {
                                         ):(                                      
                                             <div className="form-group" style={{height:'550px',marginTop:"30px"}}>
                                                 <div style={{ marginBottom: '20px',position: 'relative' }}>
-                                                    <img src={bookeData && bookeData.images ? `http://127.0.0.1:8000${bookeData.images}` : '/default-book.jpg'} alt="Preview" style={{height:"450px", 
+                                                    <img src={bookeData && bookeData.images ? `https://bookapp.solutions${bookeData.images}` : '/default-book.jpg'} alt="Preview" style={{height:"450px", 
                                                         width: '390px',
                                                         borderRadius: '10px',
                                                         position: 'relative',
