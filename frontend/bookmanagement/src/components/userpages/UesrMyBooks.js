@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import UserFooter from './UserFooter';
 import UserNavbar from './UserNavbar';
 import bgimage1 from '../../assets/images/bgimage1.jpg'
@@ -10,7 +10,15 @@ function UesrMyBooks() {
     const {mybooks} = useSelector((state)=>state.auth)
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    console.log(mybooks)
+    const [currentPage, setCurrentPage] = useState(1);
+    const booksPerPage = 4;
+    const indexOfLastBook = currentPage * booksPerPage;
+    const indexOfFirstBook = indexOfLastBook - booksPerPage;
+    const currentBooks = mybooks?.slice(indexOfFirstBook, indexOfLastBook);
+    const totalPages = Math.ceil(mybooks?.length / booksPerPage);
+    const handlePageChange = (pageNumber) => {
+      setCurrentPage(pageNumber);
+    };
     useEffect(()=>{
         console.log("tyeejkh")
         dispatch(getMyBooks())
@@ -58,25 +66,38 @@ function UesrMyBooks() {
 
     </div>
             <div className="card p-4">
-                <div className="row" style={{color:'black'}}>
-                {mybooks && mybooks.length > 0 ?(
-                     mybooks.map((book, index) => (
-                        <div key={book.id || index} className="col-md-3 mb-4">
+            <div className="row" style={{color:'black'}}>
+                  {currentBooks && currentBooks.length > 0 ? (
+                    currentBooks.map((book, index) => (
+                      <div key={book.id || index} className="col-md-3 mb-4">
                         <div className="card h-100" style={{cursor:"pointer"}} onClick={() => handleiClick(book.id)}>
-                            <img src={book.images ? `https://bookapp.solutions${book.images}` : '/default-book.jpg'} className="card-img-top" alt={book.title}/>
-                            <div className="card-body">
-                            <h5 className="card-title">{book.title.length > 25 ?(
-                                book.title.substring(0,25) +'.......'
-                            ):(
-                                book.title
-                            )}</h5>
+                          <img src={book.images ? `https://bookapp.solutions${book.images}` : '/default-book.jpg'} className="card-img-top" alt={book.title}/>
+                          <div className="card-body">
+                            <h5 className="card-title">
+                              {book.title.length > 25 ? book.title.substring(0,25) + '.......' : book.title}
+                            </h5>
                             <p className="card-text">{book.author}</p>
-                            </div>
+                          </div>
                         </div>
-                        </div>
+                      </div>
                     ))
-                ):(<p> You are not Registered any Books</p>) }
-                        </div>
+                  ) : (<p> You are not Registered any Books</p>)}
+                </div>
+
+
+                {totalPages > 1 && (
+  <div className="d-flex justify-content-center mt-4">
+    {Array.from({ length: totalPages }, (_, index) => (
+      <button
+        key={index}
+        className={`btn btn-sm ${currentPage === index + 1 ? 'btn-primary' : 'btn-outline-primary'} mx-1`}
+        onClick={() => handlePageChange(index + 1)}
+      >
+        {index + 1}
+      </button>
+    ))}
+  </div>
+)}
             </div>
         </div>
       <UserFooter/>

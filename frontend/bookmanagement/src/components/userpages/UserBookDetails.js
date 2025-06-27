@@ -94,7 +94,7 @@ function UserBookDetails() {
                         <div
                                 className="col-md-6"
                                 style={{
-                                   
+                                    height:'550px',
                                     width: "320px",
                                     border: "1px solid grey", // thinner and grey
                                     marginTop: "30px",
@@ -182,7 +182,7 @@ function UserBookDetails() {
 
 
                         <div className="col-md-6">
-                                <div className="form-group" style={{height:'550px',marginTop:"50px",position: 'relative',marginLeft:"40px" }}>
+                                <div className="form-group" style={{marginTop:"50px",position: 'relative',marginLeft:"40px" }}>
 
                                                   <h3>{singlebook.book?.title? singlebook.book.title :"No Title availble Now"}</h3>   
                                                   <div>
