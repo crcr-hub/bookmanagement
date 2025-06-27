@@ -34,7 +34,8 @@ ALLOWED_HOSTS = [
     "www.bookapp.solutions",
     "127.0.0.1",
     "localhost:3000",
-     "http://localhost:3000",
+    "http://localhost:3000",
+    "https://bookmanagement-three.vercel.app",
     
     
 
