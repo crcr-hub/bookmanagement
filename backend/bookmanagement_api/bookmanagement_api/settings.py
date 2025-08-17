@@ -29,7 +29,7 @@ SECRET_KEY = 'django-insecure-*p7o0)v&_pu+)xv1gex#3yvnwqu7&%jx!t1-1g^sj42(u87ie+
 DEBUG = False
 
 ALLOWED_HOSTS = [
-    "13.61.174.57",
+    "13.60.37.99",
     "bookapp.solutions",
     "www.bookapp.solutions",
     "127.0.0.1",
