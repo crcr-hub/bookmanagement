@@ -59,13 +59,7 @@ INSTALLED_APPS = [
 
 ]
 
-MIDDLEWARE = [
 
-    'corsheaders',
-    'rest_framework_simplejwt.token_blacklist',
-  
-
-]
 
 
 
@@ -112,6 +106,13 @@ DATABASES = {
         'PORT' : '5432'
     }
 }
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://bookapp.solutions",
+    "https://www.bookapp.solutions",
+    "https://bookmanagement-three.vercel.app",
+]
+
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
