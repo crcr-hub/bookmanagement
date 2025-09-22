@@ -29,12 +29,16 @@ SECRET_KEY = 'django-insecure-*p7o0)v&_pu+)xv1gex#3yvnwqu7&%jx!t1-1g^sj42(u87ie+
 DEBUG = False
 
 ALLOWED_HOSTS = [
-    "3.25.116.124",
+    "13.62.105.62",
     "bookapp.solutions",
     "www.bookapp.solutions",
     "127.0.0.1",
-    "bookmanagement-three.vercel.app",
-    "localhost",
+    "localhost:3000",
+    "http://localhost:3000",
+    "https://bookmanagement-three.vercel.app",
+    
+    
+
 ]
 
 # Application definition
@@ -54,6 +58,12 @@ INSTALLED_APPS = [
 
 
 ]
+
+
+
+
+
+
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -97,13 +107,6 @@ DATABASES = {
         'PORT' : '5432'
     }
 }
-
-CSRF_TRUSTED_ORIGINS = [
-    "https://bookapp.solutions",
-    "https://www.bookapp.solutions",
-    "https://bookmanagement-three.vercel.app",
-]
-
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
@@ -168,24 +171,6 @@ STATIC_ROOT = BASE_DIR / "static"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-CORS_ALLOW_ALL_ORIGINS = False
-CORS_ALLOW_CREDENTIALS = True
-
-CORS_ALLOW_METHODS = [
-    "GET",
-    "POST",
-    "OPTIONS",
-    "PUT",
-    "PATCH",
-    "DELETE",
-]
-
-CORS_ALLOW_HEADERS = [
-    "Content-Type",
-    "Authorization",
-    "X-Requested-With",
-]
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
