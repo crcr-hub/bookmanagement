@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 from datetime import timedelta
 import os
+from decouple import config
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -23,22 +24,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-*p7o0)v&_pu+)xv1gex#3yvnwqu7&%jx!t1-1g^sj42(u87ie+'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     "13.62.105.62",
     "bookapp.solutions",
     "www.bookapp.solutions",
     "127.0.0.1",
-    "localhost:3000",
-    "http://localhost:3000",
+    "localhost",
+    "http://localhost:3001",
     "https://bookmanagement-three.vercel.app",
-    
-    
-
 ]
 
 # Application definition
@@ -95,32 +93,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'bookmanagement_api.wsgi.application'
 
-
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'bookmanagement',
-        'USER' : 'postgres',
-        'PASSWORD' : 'raijo',
-        'HOST' : 'localhost',
-        'PORT' : '5432'
+        'ENGINE': config('DB_ENGINE'),
+        'NAME': config('DB_NAME'),
+        'USER' : config('DB_USER'),
+        'PASSWORD' : config('DB_PASSWORD'),
+        'HOST' : config('DB_HOST'),
+        'PORT' : config('DB_PORT')
     }
 }
 
-# Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
-
-# Password validation
-# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -173,12 +157,14 @@ STATIC_ROOT = BASE_DIR / "static"
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOWED_ORIGINS = [
+     "http://127.0.0.1:9000", 
     "http://localhost:3000",
     "http://127.0.0.1:3000",
     "https://bookapp.solutions",
     "https://www.bookapp.solutions",
     "https://bookmanagement-three.vercel.app",
 ]
+
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days = 1),
