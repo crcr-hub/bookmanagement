@@ -76,6 +76,11 @@ function UserAddBook() {
                     setErrors({ image: "Cropping failed or unsupported image format." });
                     return;
                   }
+                 
+                if (blob.size > 500 * 1024) {
+                    setErrors({ image: "Image must be less than 500 KB." });
+            return;
+          }
                 const croppedFile = new File([blob], 'cropped-image.jpg', { type: 'image/jpeg' });
                 const previewUrl = URL.createObjectURL(blob); // Preview URL
                 resolve({ croppedFile, previewUrl });
@@ -87,7 +92,6 @@ function UserAddBook() {
 
 
       const handlePreview = async () => {
-       
         if (image && croppedAreaPixels) {
           const croppedImage = await getCroppedImage(image, croppedAreaPixels);
           setPreview(croppedImage);
@@ -96,10 +100,7 @@ function UserAddBook() {
       };
 
 
-      
-
-
-
+    
     const [errors, setErrors] = useState({});    
     const containsHTMLTags = (input) => /<[^>]*>/.test(input);
     const hasAlphabets = (text) => /[a-zA-Z]/.test(text);
@@ -180,7 +181,6 @@ function UserAddBook() {
                                   }
                             
                                   if (payload?.author) {
-                                    console.log("yes author", payload.author[0])
                                     newErrors.author = payload.author[0]; 
                                   }
                             
@@ -461,7 +461,7 @@ function UserAddBook() {
 
                                             </>
                                             )}
-{/* Zoom Slider */}
+
                                            
                                             
                                            
