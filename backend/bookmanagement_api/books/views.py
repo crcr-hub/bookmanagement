@@ -44,7 +44,8 @@ class Registeriew(generics.CreateAPIView):
             return Response({"user": user.username,"message": "Registered successfully"}, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
+
+# Retrieve User Details        
 class UserDetails(APIView):
     permission_classes = [IsAuthenticated]
     def get(self,request):
@@ -88,6 +89,7 @@ class LogoutView(APIView):
             return Response({"error": str(e)}, status=400)
 
 
+# Retrieve and Update User Profile
 class UserProfile(APIView):
     permission_classes = [IsAuthenticated]
     def get(self,request):
@@ -123,7 +125,7 @@ class UserProfile(APIView):
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-
+# Retrieve Books For Indexpage
 class GetIndexBooks(APIView):
     def get(self, request):
         genre = request.query_params.get('genre')
@@ -135,18 +137,19 @@ class GetIndexBooks(APIView):
         return Response(serializer.data)
     
 
+# Add and Get Book Details
 class BookView(APIView):
     parser_classes = [MultiPartParser, FormParser]
     permission_classes = [IsAuthenticated]
     
-    def post(self,request):
+    def post(self,request): # Add Books
         serializer = BookSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(user=request.user)  # attach the user
             return Response({"message": "Book added successfully"}, status=status.HTTP_201_CREATED)
         print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    def get(self, request):
+    def get(self, request): # Retrieve Book
         genre = request.query_params.get('genre')
         books = Books.objects.all()
         if genre:
@@ -154,6 +157,8 @@ class BookView(APIView):
         serializer = BookSerializer(books, many=True, context={'request': request})
         return Response(serializer.data)
 
+
+# get  books for owner
 class GetBooks(APIView):
     permission_classes = [IsAuthenticated]
     def get(self,request):
@@ -162,15 +167,16 @@ class GetBooks(APIView):
         serializer = BookSerializer(books, many=True)
         return Response(serializer.data,status=status.HTTP_200_OK)
 
+# Update and Get User Book Details
 class UpdateBook(APIView):
     permission_classes = [IsAuthenticated]
-    def get(self,request,bid):
+    def get(self,request,bid): # Get My Book
         user = request.user
         book = get_object_or_404(Books, id=bid, user=user)
         serializer = BookSerializer(book)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def put(self,request,bid):
+    def put(self,request,bid): # UPdate My Book
         user = request.user
         book =  get_object_or_404(Books, id=bid, user=user)
         serializer = BookSerializer(book,data = request.data,partial=True)
@@ -180,27 +186,27 @@ class UpdateBook(APIView):
         print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    def delete(self,request,bid):
+    def delete(self,request,bid): #  delete book
         book = get_object_or_404(Books, id = bid, user=request.user)
         book.is_deleted = True
         book.save()
         return Response({'message': 'Book soft-deleted successfully.'})
 
-    
+# Subscribe and get subscribed book   
 class BookDetails(APIView):
     permission_classes = [IsAuthenticated]
-    def get(self,request,bid):
+    def get(self,request,bid): 
         book = get_object_or_404(Books ,id= bid)
         user = request.user
         owner = (user == book.user)
-        subscribed = Subscription.objects.filter(user=user, book=book, unsubscribe=False).exists()
+        subscribed = Subscription.objects.filter(user=user, book=book, unsubscribe=False).exists() # Retrieve the book details like whether user is an owner or already subscribed
         serializer = BookSerializer(book)
         return Response({
             "book": serializer.data,
             "owner": owner,
             "subscribed": subscribed
         },status=status.HTTP_200_OK)
-    def post(self,request,bid):
+    def post(self,request,bid):         # Subscrib a Book
         book = get_object_or_404(Books ,id= bid)
         user = request.user
         owner = (user == book.user)
@@ -214,6 +220,7 @@ class BookDetails(APIView):
                 {"detail": "Subscription not allowed (already subscribed or you're the owner)."},
                             status=status.HTTP_400_BAD_REQUEST )
 
+# list of subscribed books
 class SubcriptionList(APIView):
     permission_classes=[IsAuthenticated]
     def get(self,request):
@@ -222,7 +229,8 @@ class SubcriptionList(APIView):
         books = [subscription.book for subscription in subscriptions]
         serializer = BookWithReadListSerializer(books, many=True, context={'user': user})
         return Response(serializer.data, status=status.HTTP_200_OK)
-    
+
+#     
 class ReadListBook(APIView):
     permission_classes = [IsAuthenticated]
     def post(self,request,id):
@@ -270,7 +278,7 @@ class ReadListBook(APIView):
         else:
             return Response({"error": "Book is not in your read list."}, status=status.HTTP_404_NOT_FOUND)
 
-
+# Get and Add Read list
 class handleReadlistTitle(APIView):
     permission_classes = [IsAuthenticated]
     def get(self,request):
@@ -287,6 +295,7 @@ class handleReadlistTitle(APIView):
         serializer = ReadListTitleSerializer(readlist_title)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+# get, delete and  update    a readlist
 class getSingleReadList(APIView):
     permission_classes = [IsAuthenticated]
     def get(self,reqeust,tid):
@@ -306,7 +315,6 @@ class getSingleReadList(APIView):
         try:
             title = ReadlistTitle.objects.get(id=tid, user=request.user)
             new_title = request.data.get('title', '').strip()
-            print(new_title)
             if ReadlistTitle.objects.filter(user=request.user, title=new_title).exclude(id=tid).exists():
                 return Response({"error": "A reading list with this title already exists."}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -317,6 +325,7 @@ class getSingleReadList(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except ReadlistTitle.DoesNotExist:
             return Response({"error": "Title not found."}, status=status.HTTP_404_NOT_FOUND)
+
 
 
 class GetReadlist(APIView):
@@ -330,7 +339,6 @@ class GetReadlist(APIView):
 
 class MoveReadListUp(APIView):
     permission_classes = [IsAuthenticated]
-
     def post(self, request, bid):
         user = request.user
         title = request.data.get('titleId')
