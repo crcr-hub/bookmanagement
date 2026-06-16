@@ -30,9 +30,9 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = False
 
 ALLOWED_HOSTS = [
-    "16.171.206.158",
-    "bookapp.solutions",
-    "www.bookapp.solutions",
+    "13.60.20.144",
+    "booksapp.in",
+    "www.booksapp.in",
     "127.0.0.1",
     "localhost",
     "http://localhost:3001",

@@ -492,7 +492,7 @@ function UserUpdateBook() {
                                     </div>
                                 ):(
                                     <div style={{ marginBottom: '20px',position: 'relative' }}>
-                                    <img src={bookeData && bookeData.images ? `https://bookapp.solutions${bookeData.images}` : '/default-book.jpg'} alt="Preview" 
+                                    <img src={bookeData && bookeData.images ? `https://booksapp.in${bookeData.images}` : '/default-book.jpg'} alt="Preview" 
                                        style={{height:"450px", 
                                         width: '390px',
                                          borderRadius: '10px',
@@ -571,7 +571,7 @@ function UserUpdateBook() {
                                         ):(                                      
                                             <div className="form-group" style={{height:'550px',marginTop:"30px"}}>
                                                 <div style={{ marginBottom: '20px',position: 'relative' }}>
-                                                    <img src={bookeData && bookeData.images ? `https://bookapp.solutions${bookeData.images}` : '/default-book.jpg'} alt="Preview" style={{height:"450px", 
+                                                    <img src={bookeData && bookeData.images ? `https://booksapp.in${bookeData.images}` : '/default-book.jpg'} alt="Preview" style={{height:"450px", 
                                                         width: '390px',
                                                         borderRadius: '10px',
                                                         position: 'relative',

@@ -296,7 +296,7 @@ export const addToReadlist = createAsyncThunk('book/addToReadlist',
     }
 )
 
-export const removeReadlist = createAsyncThunk('book/addToReadlist',
+export const removeReadlist = createAsyncThunk('book/removeFromReadlist',
     async(bid,{rejectWithValue})=>{
         try{
             const response = await axiosInstance.delete(`/readlist/${bid}`);
