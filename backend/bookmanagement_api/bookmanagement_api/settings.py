@@ -30,7 +30,7 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = False
 
 ALLOWED_HOSTS = [
-    "13.60.20.144",
+    "13.60.46.120",
     "booksapp.in",
     "www.booksapp.in",
     "127.0.0.1",
